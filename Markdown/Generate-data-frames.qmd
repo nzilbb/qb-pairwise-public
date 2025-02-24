@@ -1,0 +1,408 @@
+---
+title: "Do 'leaders' sound different from 'laggers? Exploring the perceptual similarity of New Zealand English voices: Data processing for supplementary Materials"
+author:   
+  - name: Elena Sheard
+    email: elena.sheard@canterbury.ac.nz
+    orcid: 0000-0003-1271-365X
+    affiliations:
+        - ref: nzilbb
+  - name: Jen Hay
+    email: jen.hay@canterbury.ac.nz
+    orcid: 0000-0001-8127-0413
+    affiliations:
+        - ref: nzilbb
+        - ref: uc-ling
+  - name:
+      given: Joshua
+      family: Wilson Black
+    email: joshua.black@canterbury.ac.nz
+    orcid: 0000-0002-8272-5763
+    affiliations:
+        - ref: nzilbb
+  - name: Robert Fromont
+    email: robert.fromont@canterbury.ac.nz
+    orcid: 0000-0001-5271-5487
+    affiliations:
+        - ref: nzilbb
+  - name: Lynn Clark
+    email: lynn.clark@canterbury.ac.nz
+    orcid: 0000-0003-3282-6555
+    affiliations:
+        - ref: nzilbb
+        - ref: uc-ling
+affiliations:
+  - id: nzilbb
+    name: New Zealand Institute of Language, Brain and Behaviour, University of Canterbury
+    city: Christchurch
+    country: New Zealand
+  - id: uc-ling
+    name: Department of Linguistics, University of Canterbury
+    city: Christchurch
+    country: New Zealand
+date: today
+lightbox: auto
+format: 
+  html:
+    theme: flatly
+    toc: true
+    toc-depth: 3
+    toc-location: right
+    code-summary: "To view code click here"
+    anchor-sections: true
+    number-sections: true
+    cap-location: margin
+    title-block-banner: true
+    fig-responsive: true
+    lang: 'en-US'
+    execute:
+      warning: false
+    code-fold: true
+    embed-resources: true
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+# Overview
+
+This file generates the data frames used in the supplementary materials
+files for the manuscript "Do 'leaders' sound different from 'laggers'?
+Exploring the perceptual similarity of New Zealand English voices". The
+script **(a)** scales the raw similarity ratings per
+participant and **(b)** generates the similarity matrices for MDS
+analysis. The script applies **(a)** and **(b)** to the responses
+filtered as reported (@sec-reported-filtering) and as pre-registered
+(@sec-prereg-filtering). The script also applies **(a)** to the
+unfiltered data (@sec-unfiltered), which is used in the supplementary
+materials to discuss the reported filtering.
+
+# Libraries and data
+
+The chunk below loads the libraries used in this script.
+
+```{r load-libraries}
+#| warnings: false
+
+# Data wrangling
+library(tidyverse)
+library(data.table)
+
+# Other
+library(here) # localised file paths
+
+# Set theme for visualisations
+theme_set(theme_bw())
+
+# Date is used for generating file names.
+date <- "250124"
+```
+
+The next chunk loads:
+
+-   The anonymised pairwise ratings from the online task
+
+-   A data frame that contains all possible pairwise combinations of the
+    38 stimuli, with IDs for each pair (ordered and unordered). This
+    data frame is used to generate the similarity matrices.
+
+```{r load-data}
+# Experiment results and demographic info
+df_anon <-
+  read_rds(
+    here(
+      "Data",
+      "Anonymised",
+      "PW_cleaned_anon_250124.rds"
+    )
+  )
+
+# Convert ratings to numeric
+df_anon <- df_anon %>%
+  mutate(
+    enteredResponse = as.numeric(enteredResponse)
+  ) 
+
+# Df containing all pairwise combinations with IDs
+combinations_anon <- read_rds(
+  here("Data", "Anonymised", "PW_combinations_anon_250124.rds")
+)
+```
+
+The next block:
+
+-   Calculates the range of pairwise rating values for each participant
+
+-   Calculates the number of maximum and minimum values used by each
+    participant (i.e., how many 0s and 1s).
+    
+-   Calculates the total number of responses for each participant.
+
+-   Generates @fig-range, which displays the distribution of the
+    calculated rating ranges.
+
+```{r participant-ranges}
+#| label: fig-range
+#| fig-cap: |
+#|     Distribution of participant rating ranges
+worker_summary_df_anon <- df_anon %>%
+  group_by(workerId) %>%
+  summarise(
+    range_scale = max(enteredResponse) - min(enteredResponse),
+    count_0 = sum(enteredResponse == 0),
+    count_1 = sum(enteredResponse == 1),
+    responses = n()
+  )
+
+worker_summary_df_anon %>%
+  ggplot(aes(x = range_scale)) +
+  geom_histogram(binwidth = 0.025)
+```
+
+@fig-range shows that, for instance, the total range of the slider is used by
+36 participants, with almost all participants using at least 50% of the slider.
+
+# Reported data {#sec-reported-filtering}
+
+## Participant filtering
+
+Remove listeners who:
+
+-   Use a range smaller than 0.25 of the scale.
+
+-   Exclusively uses the extremes.
+
+This policy is applied in the block below (see Section 7, "Discussing data
+exclusions", in the supplementary materials for motivations).
+
+```{r apply-reported-filtering}
+to_remove_reported <- worker_summary_df_anon %>%
+  mutate(extreme_count = count_0 + count_1) %>%
+  filter(
+    range_scale < 0.25 | extreme_count >= 34
+  ) %>%
+  pull(workerId)
+
+df_anon_filtered <- df_anon %>%
+  filter(!workerId %in% to_remove_reported)
+```
+
+
+## Scaling similarity ratings per participant {#sec-scaling-reported}
+
+In the code block below we z-score the participant similarity ratings.
+Z-scoring centers participant values on 0. Because the similarity matrix
+for MDS analysis requires all values to be above 0 (i.e., the analysis
+cannot be applied to negative values), we also add the absolute value of
+the minimum scaled response value to all of the response. This way, the
+lowest rating goes to 0, and all ratings are above 0.
+
+```{r scale-reported-df}
+df_anon_filtered_scaled <- df_anon_filtered %>%
+  group_by(workerId) %>%
+  mutate(
+    enteredResponse = as.numeric(enteredResponse),
+    # First: z-score responses
+    scaledResponse = scale(enteredResponse, center = TRUE, scale = TRUE)
+  ) %>%
+  # Second: Add the absolute value of the minimum response value to all of the
+  # responses. We ungroup because we need the global minimum, not the minumum
+  # for each participant.
+  ungroup() |>
+  mutate(ReScaledResponse = scaledResponse + abs(min(scaledResponse))) 
+```
+
+We then save the scaled ratings as an `.rds` file.
+
+```{r save-reported-filtering}
+file_name_ratings_ID_anon <-
+  paste0("PW_ratings_scaled_filtered_anon_", date, ".rds", sep = "")
+
+write_rds(
+  df_anon_filtered_scaled,
+  here(
+    "Data",
+    "Anonymised",
+    file_name_ratings_ID_anon
+  )
+)
+```
+
+## Similarity matrix based on scaled ratings
+
+To apply MDS, we require a square matrix with a *single* measure of
+similarity for each pair of speakers. As we have multiple ratings per
+speaker pair, we first need to generate a single value to be the input
+for the matrix. The code chunk below takes the mean for each speaker
+pair from the scaled similarity ratings, and then creates a 38 x 38
+matrix of the mean values.
+
+```{r create-reported-matrix}
+PW_means_anon <- df_anon_filtered_scaled %>%
+  group_by(pair_id_unordered) %>%
+  summarise(MeanScaledResponse = mean(ReScaledResponse)) %>%
+  right_join(combinations_anon,
+      by = c("pair_id_unordered")
+  )
+
+# Convert to wide df
+sim_matrix_anon <-
+  reshape2::dcast(PW_means_anon, Stimuli1ID ~ Stimuli2ID, value.var = "MeanScaledResponse")
+
+# Convert to matrix
+sim_matrix_anon <-
+  sim_matrix_anon %>%
+  remove_rownames() %>%
+  column_to_rownames(var = "Stimuli1ID") %>%
+  as.matrix()
+```
+
+We then save the matrix as an `.rds` file.
+
+```{r save-reported-matrix}
+file_name_matrix_ID_anon <-
+  paste0("PW_matrix_scaled_anon_", date, ".rds", sep = "")
+
+write_rds(
+  sim_matrix_anon,
+  here(
+    "Data",
+    "Anonymised",
+    file_name_matrix_ID_anon
+  )
+)
+```
+
+# Data filtered based on pre-registration {#sec-prereg-filtering}
+
+This section creates the same data frames as @sec-reported-filtering but
+applies the pre-registered filtering.
+
+## Participant filtering
+
+The code chunk below removes participants whose range of rating values
+is 2.5 standard deviations above or below the mean.
+
+```{r pre-registered-filtering}
+to_remove_prereg <- worker_summary_df_anon %>%
+  mutate(SD_indicate_range = case_when(
+    range_scale > (
+      mean(range_scale, na.rm = TRUE) + 2.5 * sd(range_scale, na.rm = TRUE)
+    ) |
+      range_scale < (
+        mean(range_scale, na.rm = TRUE) - 2.5 * sd(range_scale, na.rm = TRUE)
+      ) ~ TRUE,
+    T ~ FALSE
+  )) %>%
+  filter(
+    SD_indicate_range == TRUE 
+  ) %>%
+  pull(workerId)
+
+df_anon_prereg_filtered <- df_anon %>%
+  filter(!workerId %in% to_remove_prereg)
+```
+
+## Scaling similarity ratings per participant {#sec-scaling-prereg}
+
+The next code chunks apply the same scaling procedure as
+@sec-scaling-reported to our pre-registered filtering, and save the
+scaled ratings as an `.rds` file.
+
+```{r scale-preregistered-df}
+df_anon_prereg_filtered_scaled <- df_anon_prereg_filtered %>%
+  group_by(workerId) %>%
+  mutate(
+    enteredResponse = as.numeric(enteredResponse),
+    scaledResponse = scale(enteredResponse, center = TRUE, scale = TRUE)
+  ) %>%
+  ungroup() |>
+  mutate(ReScaledResponse = scaledResponse + abs(min(scaledResponse)))
+```
+
+```{r save-preregistered-df}
+file_name_ratings_prereg_anon <-
+  paste0("PW_ratings_scaled_PR_anon_", date, ".rds", sep = "")
+
+write_rds(
+  df_anon_prereg_filtered_scaled,
+  here(
+    "Data",
+    "Anonymised",
+    file_name_ratings_prereg_anon
+  )
+)
+```
+
+## Similarity matrix based on mean scaled ratings
+
+We now create a second similarity matrix from the pre-registered
+filtering, and save this matrix as an `.rds` file.
+
+```{r create-preregistered-matrix}
+PW_means_prereg_anon <- df_anon_prereg_filtered_scaled %>%
+  group_by(pair_id_unordered) %>%
+  summarise(MeanScaledResponse = mean(ReScaledResponse)) %>%
+  right_join(combinations_anon,
+    by = c("pair_id_unordered")
+  )
+
+# Convert to wide df
+sim_matrix_prereg <-
+  reshape2::dcast(PW_means_prereg_anon, Stimuli1ID ~ Stimuli2ID, value.var = "MeanScaledResponse")
+
+# Convert to matrix
+sim_matrix_prereg <-
+  sim_matrix_prereg %>%
+  remove_rownames() %>%
+  column_to_rownames(var = "Stimuli1ID") %>%
+  as.matrix()
+
+```
+
+```{r save-preregistered-matrix}
+file_name_matrix_prereg_anon <-
+  paste0("PW_matrix_scaled_PR_anon_", date, ".rds", sep = "")
+
+write_rds(
+  sim_matrix_prereg,
+  here(
+    "Data",
+    "Anonymised",
+    file_name_matrix_prereg_anon
+  )
+)
+```
+
+# Unfiltered ratings {#sec-unfiltered}
+
+This final section applies the scaling procedure applied in
+@sec-scaling-reported and @sec-scaling-prereg to the unfiltered data, as
+the unfiltered data is used for discussion in the supplementary materials.
+
+## Scaling similarity ratings per participant
+
+```{r scale-unfiltered-df}
+df_unfiltered <- df_anon %>%
+  group_by(workerId) %>%
+  mutate(
+    enteredResponse = as.numeric(enteredResponse),
+    scaledResponse = scale(enteredResponse, center = TRUE, scale = TRUE)
+  ) %>%
+  ungroup() |>
+  mutate(ReScaledResponse = scaledResponse + abs(min(scaledResponse)))
+
+```
+
+```{r save-unfiltered-df}
+file_name_ratings_ID_unfiltered_anon <-
+  paste0("PW_ratings_scaled_unfiltered_anon_", date, ".rds", sep = "")
+
+write_rds(
+  df_unfiltered,
+  here(
+    "Data",
+    "Anonymised",
+    file_name_ratings_ID_unfiltered_anon
+  )
+)
+```
