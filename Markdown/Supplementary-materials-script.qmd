@@ -43,7 +43,7 @@ affiliations:
 date: today
 lightbox: auto
 bibliography: 
-  - References2.bib
+  - References.bib
   - grateful-refs.bib
 format: 
   html:
@@ -119,7 +119,7 @@ The materials have the following structure:
 If you would like to see how we scaled participant similarity ratings
 and created the similarity matrices used in this file, please refer to
 the Generate-data-frames.qmd script in the github repository or at this
-[link](https://nzilbb.github.io/qb-pairwise-public/Markdown/Supplementary-materials-script.html).
+[link](https://nzilbb.github.io/qb-pairwise-public/Markdown/Generate-data-frames.html).
 
 # Libraries and dataframes {#sec-libraries-and-dataframes}
 
@@ -2053,14 +2053,17 @@ The tabs below contain model diagnostic plots from the fitted model.
 ::: panel-tabset
 #### Model residuals
 
-```{r plot-quantiles}
+```{r plot-residuals}
+#| fig-cap: "Plotted model residuals from fitted GAMM"
 # creates normal quantile plots for model residuals
 appraise(gamm_fit)
 ```
 
 #### Model contour and quantile plots
 
-```{r plot-residuals}
+```{r plot-contours}
+#| fig-cap: "Contour plots for each interaction term and a quantile plot for the random effect in the fitted GAMM"
+
 # Creates contour plots for each interaction term and a quantile plot for random
 # effect in the model
 plot(gamm_fit)
@@ -2755,7 +2758,7 @@ summary(gamm_fit_prereg, re.test = F)
 
 While the overall result of the model is stable, it is worth noting that
 there are outliers in the model residuals here that were not in those of
-the reported model (See @fig-quantiles-prereg, especially the QQ plot).
+the reported model (See @fig-residuals-prereg, especially the QQ plot).
 This provides further evidence that there were outliers that the
 pre-registered filtering failed to identify, but that our adjusted
 filtering did.
@@ -2764,15 +2767,17 @@ filtering did.
 #### Model residuals
 
 ```{r}
-#| label: fig-quantiles-prereg
+#| label: fig-residuals-prereg
+#| fig-cap: "Plotted model residuls from fitted GAMM"
 # creates normal quantile plots for model residuals
+
 appraise(gamm_fit_prereg)
 ```
 
 #### Model quantile plots
 
-```{r plot-residuals-prereg}
-# residuals
+```{r plot-quantiles-prereg}
+#| fig-cap: "Contour plots for each interaction term and a quantile plot for the random effect in the fitted GAMM"
 
 plot(gamm_fit_prereg)
 ```
