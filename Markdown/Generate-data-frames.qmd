@@ -1,5 +1,5 @@
 ---
-title: "Data processing for supplementary Materials"
+title: "Data processing for supplementary materials"
 author:   
   - name: Elena Sheard
     email: elena.sheard@canterbury.ac.nz
@@ -74,8 +74,10 @@ editor:
 # Overview
 
 This file generates the data frames used in the supplementary materials
-files for the manuscript "Do 'leaders' sound different from 'laggers'?
-Exploring the perceptual similarity of New Zealand English voices". The
+ for the manuscript "Do 'leaders' sound different from 'laggers'?
+Exploring the perceptual similarity of New Zealand English voices". The materials can be viewed [here](https://nzilbb.github.io/qb-pairwise-public/Markdown/Supplementary-materials-script.html). 
+
+This
 script **(a)** scales the raw similarity ratings per
 participant and **(b)** generates the similarity matrices for MDS
 analysis. The script applies **(a)** and **(b)** to the responses

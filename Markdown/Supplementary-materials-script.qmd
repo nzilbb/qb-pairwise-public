@@ -56,7 +56,6 @@ format:
     smooth-scroll: true
     code-summary: "Click here to view code."
     title-block-banner: '#95A044'
-    title-block-banner-colour: 'white'
     anchor-sections: true
     number-sections: true
     cap-location: margin
