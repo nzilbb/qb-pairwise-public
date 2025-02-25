@@ -177,14 +177,13 @@ library(grateful) # write package citations at end of document
 
 ```{r load-PWC-data}
 # Load scaled similarity matrix from experimental results.
-# Generated in 5_matrix generation
+# Generated in Generate-data-frames.qmd
 # 7 participants removed based on reported filtering
 # Individual pairwise ratings scaled per participant
 # Then mean taken for each stimuli pair
 matrix_scaled_ID <- read_rds(
   here(
     "Data",
-    "Anonymised",
   "PW_matrix_scaled_anon_250124.rds"
   )
 )
@@ -196,7 +195,6 @@ matrix_scaled_ID <- read_rds(
 matrix_scaled_prereg <- read_rds(
   here(
     "Data",
-    "Anonymised",
   "PW_matrix_scaled_PR_anon_250124.rds"
   )
 )
@@ -206,7 +204,6 @@ matrix_scaled_prereg <- read_rds(
 PW_ratings_ID <- read_rds(
   here(
     "Data",
-    "Anonymised",
   "PW_ratings_scaled_filtered_anon_250124.rds"
   )
 )
@@ -215,7 +212,6 @@ PW_ratings_ID <- read_rds(
 PW_ratings_prereg <- read_rds(
   here(
     "Data",
-    "Anonymised",
    "PW_ratings_scaled_PR_anon_250124.rds"
   )
 )
@@ -226,7 +222,6 @@ PW_ratings_unfiltered <-
   read_rds(
     here(
       "Data",
-      "Anonymised",
     "PW_ratings_scaled_unfiltered_anon_250124.rds"
     )
   )
@@ -248,7 +243,6 @@ df_ID <- sim2diss(matrix_scaled_ID, method = "reverse")
 # Generated in Additional_data_for_analysis.qmd file
 measures_df <- read_rds(here(
   "Data",
-  "Anonymised",
   "QB1_scores_38_anon_250121.rds"
 ))
 
@@ -268,7 +262,7 @@ measures_df <- measures_df %>%
 
 # Load vowel counts for audio stimuli
 VowelCount <- read_rds(here(
-  "Data", "Anonymised",
+  "Data",
   "StimuliVowelFrequency_anon.rds"
 ))
 ```
@@ -851,7 +845,6 @@ The next code chunk saves the plot.
 ppi <- 300
 png(
   here(
-    "Scripts",
     "Figures",
     "D1RegressionTree2.png"
   ),
@@ -942,7 +935,7 @@ pitch_PC1_ellipses
 
 # Save figure
 ggsave(
-  path = here("Scripts", "Figures"),
+  path = here("Figures"),
   dpi = 300,
   filename = "pitch_PC1_ellipses.png",
   heigh = 1650,
@@ -1059,7 +1052,7 @@ The next code chunk saves @fig-D2-regression-tree-output.
 ppi <- 300
 
 png(
-  here("Scripts", "Figures", "D2RegressionTree2.png"),
+  here("Figures", "D2RegressionTree2.png"),
   #  width = 1950,
   #  height = 1000,
   width = 1400,
@@ -1169,7 +1162,7 @@ The next code chunk saves @fig-MDS-output-fast-slow-pitch.
 
 ```{r save-D2-MDS-space}
 ggsave(
-  path = here("Scripts", "Figures"),
+  path = here("Figures"),
   dpi = 300,
   filename = "speed_pitch_ellipses.png",
   heigh = 1650,
@@ -1555,7 +1548,7 @@ main_groups
 
 # Save the image
 ggsave(
-  path = here("Scripts", "Figures"),
+  path = here("Figures"),
   dpi = 300,
   filename = "MainGroups.png",
   width = 3200,
@@ -1576,7 +1569,6 @@ in the manuscript.
 image_D1 <-
   image_read(
     here(
-      "Scripts",
       "Figures",
       "D1RegressionTree2.png"
     )
@@ -1627,7 +1619,7 @@ image_D1 <-
 # Annotate with main speaker groups
 # Unrotated
 image_D2 <-
-  image_read(here("Scripts", "Figures", "D2RegressionTree2.png")) %>%
+  image_read(here("Figures", "D2RegressionTree2.png")) %>%
   image_annotate(
     "Estimated D2",
     size = 75,
@@ -1672,7 +1664,7 @@ image_D2 <-
 # Load regression tree predicting D2 # Annotate with main speaker groups
 # Rotated
 D2_rotate <-
-  image_read(here("Scripts", "Figures", "D2RegressionTree2.png")) %>%
+  image_read(here("Figures", "D2RegressionTree2.png")) %>%
   image_annotate(
     "Estimated D2",
     size = 75,
@@ -1711,7 +1703,6 @@ D2_rotate <-
 image_write(
   image_D1,
   path = here(
-    "Scripts",
     "Figures",
     "D1RegressionTreeAnnotated.png"
   ),
@@ -1721,7 +1712,6 @@ image_write(
 image_write(
   image_D2,
   path = here(
-    "Scripts",
     "Figures",
     "D2RegressionTreeAnnotated.png"
   ),
@@ -1731,7 +1721,6 @@ image_write(
 image_write(
   D2_rotate,
   path = here(
-    "Scripts",
     "Figures",
     "D2RegressionTreeAnnotatedRotated.png"
   ),
@@ -1750,7 +1739,6 @@ image_write(
 maingroups <-
   image_read(
     here(
-      "Scripts",
       "Figures",
       "MainGroups.png"
     )
@@ -1760,7 +1748,6 @@ maingroups <-
 D1RegressionTree <-
   image_read(
     here(
-      "Scripts",
       "Figures",
       "D1RegressionTreeAnnotated.png"
     )
@@ -1770,7 +1757,6 @@ D1RegressionTree <-
 D2RegressionTree <-
   image_read(
     here(
-      "Scripts",
       "Figures",
       "D2RegressionTreeAnnotatedRotated.png"
     )
@@ -1780,7 +1766,6 @@ D2RegressionTree <-
 D1MDS <-
   image_read(
     here(
-      "Scripts",
       "Figures",
       "pitch_PC1_ellipses.png"
     )
@@ -1790,7 +1775,6 @@ D1MDS <-
 D2MDS <-
   image_read(
     here(
-      "Scripts",
       "Figures",
       "speed_pitch_ellipses.png"
     )
@@ -1799,9 +1783,8 @@ D2MDS <-
 # Load blank image (used to create balance in final image)
 blank <- image_read(
   here(
-    "Scripts",
     "Figures",
-    "Test.png"
+    "Blank.png"
   )
 )
 
@@ -1897,7 +1880,7 @@ D1_MainD2_appended
 # save interpretation
 image_write(
   D1_MainD2_appended,
-  path = here("Scripts", "Figures", "D1_MainD2_appended.png"),
+  path = here("Figures", "D1_MainD2_appended.png"),
   format = "png",
   density = 600
 )
@@ -2244,7 +2227,7 @@ figure_3 <- gamm_estimates %>%
 # Save figure 3
 ggsave(
   figure_3,
-  path = here("Scripts", "Figures"),
+  path = here("Figures"),
   dpi = 300,
   filename = "GAMMOutput_SpeedPitch.png",
   width = 9,
@@ -2276,7 +2259,7 @@ figure_4 <- gamm_estimates %>%
 # Save figure 4
 ggsave(
   figure_4,
-  path = here("Scripts", "Figures"),
+  path = here("Figures"),
   dpi = 300,
   filename = "GAMMOutput_PC1.png",
   width = 4.5,
