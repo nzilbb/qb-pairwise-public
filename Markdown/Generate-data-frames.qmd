@@ -1,5 +1,5 @@
 ---
-title: "Do 'leaders' sound different from 'laggers? Exploring the perceptual similarity of New Zealand English voices: Data processing for supplementary Materials"
+title: "Data processing for supplementary Materials"
 author:   
   - name: Elena Sheard
     email: elena.sheard@canterbury.ac.nz
@@ -43,25 +43,33 @@ date: today
 lightbox: auto
 format: 
   html:
+    embed-resources: true
+    self-contained: true
     theme: flatly
     toc: true
-    toc-depth: 3
+    toc-expand: true
     toc-location: right
-    code-summary: "To view code click here"
+    smooth-scroll: true
+    code-summary: "Click here to view code."
+    title-block-banner: '#95A044'
     anchor-sections: true
     number-sections: true
     cap-location: margin
-    title-block-banner: true
     fig-responsive: true
     lang: 'en-US'
     execute:
       warning: false
     code-fold: true
-    embed-resources: true
 editor: 
   markdown: 
     wrap: 72
 ---
+
+```{css, echo=FALSE}
+.title {
+  color: white;
+}
+```
 
 # Overview
 
@@ -111,7 +119,6 @@ df_anon <-
   read_rds(
     here(
       "Data",
-      "Anonymised",
       "PW_cleaned_anon_250124.rds"
     )
   )
@@ -124,7 +131,7 @@ df_anon <- df_anon %>%
 
 # Df containing all pairwise combinations with IDs
 combinations_anon <- read_rds(
-  here("Data", "Anonymised", "PW_combinations_anon_250124.rds")
+  here("Data", "PW_combinations_anon_250124.rds")
 )
 ```
 
@@ -221,7 +228,6 @@ write_rds(
   df_anon_filtered_scaled,
   here(
     "Data",
-    "Anonymised",
     file_name_ratings_ID_anon
   )
 )
@@ -266,7 +272,6 @@ write_rds(
   sim_matrix_anon,
   here(
     "Data",
-    "Anonymised",
     file_name_matrix_ID_anon
   )
 )
@@ -327,7 +332,6 @@ write_rds(
   df_anon_prereg_filtered_scaled,
   here(
     "Data",
-    "Anonymised",
     file_name_ratings_prereg_anon
   )
 )
@@ -367,7 +371,6 @@ write_rds(
   sim_matrix_prereg,
   here(
     "Data",
-    "Anonymised",
     file_name_matrix_prereg_anon
   )
 )
@@ -401,7 +404,6 @@ write_rds(
   df_unfiltered,
   here(
     "Data",
-    "Anonymised",
     file_name_ratings_ID_unfiltered_anon
   )
 )

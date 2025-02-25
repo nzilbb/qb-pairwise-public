@@ -56,7 +56,7 @@ format:
     smooth-scroll: true
     code-summary: "Click here to view code."
     title-block-banner: '#95A044'
-    title-block-banner-colour: white
+    title-block-banner-colour: 'white'
     anchor-sections: true
     number-sections: true
     cap-location: margin
@@ -69,6 +69,12 @@ editor:
   markdown: 
     wrap: 72
 ---
+
+```{css, echo=FALSE}
+.title {
+  color: white;
+}
+```
 
 # Overview
 
@@ -113,7 +119,8 @@ The materials have the following structure:
 
 If you would like to see how we scaled participant similarity ratings
 and created the similarity matrices used in this file, please refer to
-the Generate-data-frames.qmd script in the github repository.
+the Generate-data-frames.qmd script in the github repository or at this
+[link](https://nzilbb.github.io/qb-pairwise-public/Markdown/Supplementary-materials-script.html).
 
 # Libraries and dataframes {#sec-libraries-and-dataframes}
 
