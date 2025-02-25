@@ -11,9 +11,9 @@ This repository contains the analysis for "Do 'leaders' sound different from 'la
 There are two primary ways to use this repository:
 
 1. Read through the full analysis as a website by clicking 
-[here](https://nzilbb.github.io/qb-pairwise-public/Markdown/Supplementary-materials-script.html)(Recommended).
+[here](https://nzilbb.github.io/qb-pairwise-public/Markdown/Supplementary-materials-script.html) (*recommended*).
 2. Clone the repository to rerun our analysis locally or to
-modify it (For those who are interested). If you don't know how to do this in RStudio, go here: <https://happygitwithr.com/new-github-first#new-rstudio-project-via-git>.
+modify it (*for those who are interested*). If you don't know how to do this in RStudio, go here: <https://happygitwithr.com/new-github-first#new-rstudio-project-via-git>.
 
 ## Repository structure
 
