@@ -273,7 +273,18 @@ VowelCount <- read_rds(here(
 ))
 ```
 
-## Additional functions {#sec-additional-functions}
+## Session information and additional functions {#sec-additional-functions}
+
+::: {.callout-info collapse="true"}
+### Session information
+
+Here are the full details of system and packages used to run this
+analysis:
+
+```{r session-info}
+sessionInfo()
+```
+:::
 
 The code chunk below contains a custom function that creates a new
 column indicating whether a value in a specified column is above, below,
