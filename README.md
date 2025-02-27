@@ -1,4 +1,4 @@
-![](Images/NZILBB2.png)
+![](Figures/NZILBB2.png)
 
 # Do 'leaders' sound different from 'laggers? Exploring the perceptual similarity of New Zealand English voices
 
