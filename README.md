@@ -13,7 +13,9 @@ There are two primary ways to use this repository:
 1. Read through the full analysis as a website by clicking 
 [here](https://nzilbb.github.io/qb-pairwise-public/Markdown/Supplementary-materials-script.html) (*recommended*).
 2. Clone the repository to rerun our analysis locally or to
-modify it (*for those who are interested*). If you don't know how to do this in RStudio, go here: <https://happygitwithr.com/new-github-first#new-rstudio-project-via-git>.
+modify it (*for those who are interested*). If you don't know how to do this in RStudio, go [here](https://happygitwithr.com/new-github-first#new-rstudio-project-via-git).
+
+If you would like to know how the 'leader-lagger' and 'back-vowel configuration' scores used in this analysis were generated, please refer to this [github repository](https://github.com/nzilbb/qb_stability_public). 
 
 ## Repository structure
 
