@@ -758,9 +758,19 @@ perceived to sound less similar to one another.
 
 measures_df %>%
   ggplot(aes(x = D1_PW, y = D2_PW)) +
-  geom_label(aes(label = SpeakerId), size = 4) +
+  geom_label(aes(label = SpeakerId), size = 3) +
   coord_fixed() +
   labs(x = "Dimension 1", y = "Dimension 2")
+
+# Save figure 1
+ggsave(
+  path = here("Figures"),
+  dpi = 300,
+  filename = "Figure1.png",
+  heigh = 950,
+  width = 1150,
+  units = "px"
+)
 ```
 
 ## Predicting MDS dimensions with regression trees {#sec-predicting-mds-dimensions-with-regression-trees}
