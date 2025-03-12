@@ -20,11 +20,6 @@ author:
     orcid: 0000-0002-8272-5763
     affiliations:
         - ref: nzilbb
-  - name: Robert Fromont
-    email: robert.fromont@canterbury.ac.nz
-    orcid: 0000-0001-5271-5487
-    affiliations:
-        - ref: nzilbb
   - name: Lynn Clark
     email: lynn.clark@canterbury.ac.nz
     orcid: 0000-0003-3282-6555

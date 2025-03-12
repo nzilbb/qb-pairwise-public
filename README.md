@@ -2,7 +2,7 @@
 
 # Do 'leaders' sound different from 'laggers? Exploring the perceptual similarity of New Zealand English voices
 
-Elena Sheard, Jen Hay, Joshua Wilson Black, Robert Fromont, Lynn Clark
+Elena Sheard, Jen Hay, Joshua Wilson Black, Lynn Clark
 
 ## How to use this repository
 
