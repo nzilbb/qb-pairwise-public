@@ -1,12 +1,12 @@
 ![](Figures/NZILBB2.png)
 
-# Do 'leaders' in change sound different from 'laggers? The perceptual similarity of New Zealand English voices
+# Do 'leaders' in change sound different from 'laggers'? The perceptual similarity of New Zealand English voices
 
 Elena Sheard, Jen Hay, Joshua Wilson Black, Lynn Clark
 
 ## How to use this repository
 
-This repository contains the analysis for "Do 'leaders' sound different from 'laggers? Exploring the perceptual similarity of New Zealand English voices" (in prep).
+This repository contains the supplementary materials for "Do 'leaders' sound different from 'laggers? Exploring the perceptual similarity of New Zealand English voices" (Under review). 
 
 There are two primary ways to use this repository:
 
