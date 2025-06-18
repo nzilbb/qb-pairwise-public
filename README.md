@@ -4,6 +4,8 @@
 
 Elena Sheard, Jen Hay, Joshua Wilson Black, Lynn Clark
 
+[![DOI](https://zenodo.org/badge/938398182.svg)](https://doi.org/10.5281/zenodo.15686465)
+
 ## How to use this repository
 
 This repository contains the supplementary materials for "Do 'leaders' in change sound different from 'laggers'? The perceptual similarity of New Zealand English voices" (Under review). 
