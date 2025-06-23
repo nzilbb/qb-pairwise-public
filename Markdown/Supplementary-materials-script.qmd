@@ -417,7 +417,7 @@ VowelCount %>%
 
 # Stimuli distribution across participants {#sec-stimuli-distribution-across-participants}
 
-This section details how the possible 703 pairwise combinations of the 38 stimuli were distributed across participants in the experiment design. Each participant listened to a subset of the possible combinations, because listening to all possible combinations would take multiple hours. Longer experiment times can reduce participant engagement [@RN720] and lead to more unreliable responses [e.g., @RN722; @RN721]. As such, each participant listened to two 'blocks' of 19 stimuli. In each block, each speaker would be heard once. A simple random sampling of stimuli for each participant would have resulted in an uneven distribution of rating counts for each pair, with some pairs likely to never be rated at all. We instead used a semi-random sampling procedure that distributed the possible combinations of stimuli pairs as evenly as possible across the stimuli subsets participants heard. In effect, for approximately every 18 participants all 703 stimuli pairs are listened to once. We note that participant drop-out meant that, in practice, the overall distribution of the possible pairwise combinations was not as even as intended.
+This section details how the possible 703 pairwise combinations of the 38 stimuli were distributed across participants in the experiment design. Each participant listened to two 'blocks' of 19 stimuli. In each block, each speaker would be heard once. A simple random sampling of stimuli for each participant would have resulted in an uneven distribution of rating counts for each pair, with some pairs likely to never be rated at all. We instead used a semi-random sampling procedure that distributed the possible combinations of stimuli pairs as evenly as possible across the stimuli subsets participants heard. In effect, for approximately every 18 participants all 703 stimuli pairs are listened to once. Participant drop-out meant that, in practice, the overall distribution of the possible pairwise combinations was not as even as intended.
 
 1.  An initial block of 19 stimuli pairs is created by randomly sorting all 38 stimuli, then assigning the first half of the list to the second half (i.e., the first stimulus would be paired with the twentieth stimulus, the second with the twenty-first). Each speaker is, therefore, only represented once in the block.
 
@@ -438,21 +438,28 @@ This section details how the possible 703 pairwise combinations of the 38 stimul
 
     -   In a case where a batch has 36 blocks, this means that all pairs in this batch would (in theory) be listened to and rated across 18 participants (2 blocks per listener). The order the audio stimuli were presented to individual listeners was then randomised, as was the order of the stimuli pairs.
 
-```{r}
+```{r pair-summary-figure}
 # Density plots with semi-transparent fill
-PW_ratings_ID %>% 
+  PW_ratings_ID %>% 
   group_by(pair_id_unordered) %>% 
   summarise(PairCount=n()) %>% 
   ungroup() %>% 
-ggplot(aes(y =PairCount, x="Unordered")) +geom_jitter(alpha=0.2)+geom_boxplot(notch = T)+
+ggplot(aes(y =PairCount,x="Unordered")) +geom_jitter(alpha=0.2) +geom_boxplot(notch = T,alpha=0.85)+
   labs(x="Pairs")+
-  PW_ratings_ID %>% 
-  group_by(pair_id_ordered) %>% 
-  summarise(PairCount=n()) %>% 
-  ungroup() %>% 
-ggplot(aes(y =PairCount,x="Ordered")) +geom_jitter(alpha=0.2) +geom_boxplot(notch = T)+
-  labs(x="Pairs")
+    scale_y_continuous(breaks =c(2,4,6,8,10,12))
 
+```
+
+```{r pair-summary-table}
+ratings_sum <- PW_ratings_ID %>% 
+group_by(pair_id_unordered) %>% 
+summarise(pairCount=n()) 
+
+ ratings_sum %>% 
+   summarise(mean=mean(pairCount),
+             median=median(pairCount),
+             min=min(pairCount),
+             max=max(pairCount))
 ```
 
 # Code for reported results {#sec-code-for-reported-results}
@@ -559,7 +566,7 @@ Also following @RN620, we apply an informal significance test in @fig-significan
 #| label: fig-significanceTest
 #| fig-cap: |
 #|   Stress values from 500 permuted iterations of MDS with 5% quintile (dashed 
-#|   line) and actual stress value of final MDS (solid line)"
+#|   line) and actual stress value of final MDS (solid line)
 
 set.seed(100)
 nrep <- 500
@@ -589,10 +596,31 @@ abline(v = fit_df_ID$stress)
 
 The insights from @fig-mds-dim and @fig-significanceTest provide us with sufficient evidence to support an MDS with two dimensions.
 
-### Shepard plot
+### Shepard and bubble plot
+
+@fig-shepard displays a Shephard diagram of the reported MDS analysis. @fig-bubble instead displays a "bubble" plot of the stress-per-point (SPP) of the individual objects (i.e., speakers) in the data. The larger the 'bubble' for each speaker, the more they contribute to the misfit of the MDS (i.e., the higher their SPP). All speakers have an SPP below 5% (min = 1.76, max = 4.6). Speakers 2, 37 and 25 have the highest SPP values (\>4), but are all within 3 standard deviations of the mean SPP value (4.83). Given they also do not inhibit the interpretability of the perceptual similarity space, we proceed with the reported MDS analysis.
 
 ```{r shephard-plot}
+#| label: fig-shepard
+#| fig-cap: |
+#|   Shephard diagram of the final M-Spline MDS analysis
 plot(fit_df_ID, plot.type="Shepard",plot.dim=c(1,2))
+
+```
+
+```{r}
+#| label: fig-bubble
+#| fig-cap: |
+#|   Bubble plot of the final M-Spline MDS analysis. Larger 'bubbles' indicate higher Stress Per Point (SPP)
+plot(fit_df_ID, plot.type="bubbleplot",plot.dim=c(1,2))
+
+print(paste("Range of SPP values for QB speakers:", min(fit_df_ID$spp),max(fit_df_ID$spp)))
+
+print(paste(
+  "3 SD above the mean SPP value",
+  mean(fit_df_ID$spp) + 3 * sd(fit_df_ID$spp)
+))
+
 ```
 
 ### Extracting speaker scores
