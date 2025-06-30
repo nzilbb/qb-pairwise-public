@@ -125,13 +125,16 @@ library(ggalt) # gg_encircle function
 # MDS
 library(smacof) # Apply MDS
 library(rsample) # bootstrapping
-library(vegan) # procrustes transformation of MDS
+library(vegan) # procrustes transformation of MDS (and PERMANOVA)
 # Using development version of nzilbb.vowels,
 # Any version after 0.3.1 will work.
 # To install the development version, run the following line.
 # You may also need to install the 'remotes' package.
 # remotes::install_github('nzilbb/nzilbb_vowels')
 library(nzilbb.vowels) # Assess MDS fit
+
+# PERMANOVA
+library(pairwiseAdonis) #fit pairwise PERMANOVA 
 
 # Decision trees
 library(tidymodels) # fit decision trees
@@ -363,7 +366,7 @@ This section discussions the selection of the audio stimuli used in the task. Th
 
 ## Transcriptions and vowel stock take {#sec-transcriptions-and-vowel-stock-take}
 
-@tbl-vowel-stocktake contains the transcriptions for all 38 audio stimuli used in the online task. The table indicates whether each of the 10 NZE monophthongs considered in @RN506 is present in the stimuli (1 = present, 0 = absent).[^2] The table also counts the total number of monophthongs represented in each stimulus (e.g., a 5 indicates 5 of the 10 monophthongs are present in a stimulus) and the total number of stimuli in which each monophthong is represented. At least 6 of the 10 monophthongs are present in each stimuli (median = 8, mean = 8.13). The vowels from the leader-lagger continuum are more reliably represented than the vowels in the back-vowel configuration, largely due to the low occurrences of [start]{.smallcaps} across the stimuli.
+@tbl-vowel-stocktake contains the transcriptions for all 38 audio stimuli used in the online task. The table indicates whether each of the 10 NZE monophthongs considered in @RN506 is present in the stimuli (1 = present, 0 = absent).[^2] The table also counts the total number of monophthongs represented in each stimulus (e.g., a 5 indicates 5 of the 10 monophthongs are present in a stimulus) and the total number of stimuli in which each monophthong is represented. At least 6 of the 10 monophthongs are present in each stimuli (median = 8, mean = 8.13). The vowels from the leader-lagger continuum are more reliably represented than the vowels in the back-vowel configuration, largely due to the low occurrences of [start]{.smallcaps} across the stimuli. We also note the [strut]{.smallcaps} F1 is loaded onto the leader-lagger continuum while [strut]{.smallcaps} F2 is loaded onto the back vowel configuration.
 
 [^2]: We note that vowels are counted as being "present" regardless of stress.
 
@@ -396,8 +399,8 @@ VowelCount %>%
     KIT,
     FLEECE,
     NURSE,
-    STRUT,
     GOOSE,
+    STRUT,
     LOT,
     THOUGHT,
     START,
@@ -412,7 +415,17 @@ VowelCount %>%
   ) %>%
   column_spec(2, width="20cm") %>% 
   scroll_box(width = "100%", height = "500px") %>%
-  add_header_above(c(" ", "", "Leader-Lagger" = 7, "Back Vowel" = 3, ""))
+  add_header_above(c(" ", "", "Leader-Lagger" = 7, "Back Vowel" = 3))
+```
+
+```{r summarise-vowel-count}
+#| label: tbl-vowel-mean-median
+#| tbl-cap: "Mean and median presence of monophthongs in audio stimuli"
+VowelCount %>% 
+  filter(!is.na(Total)) %>% 
+  summarise(MeanCount = mean(Total),
+            MedianCount = median(Total)) %>% 
+    kable() 
 ```
 
 # Stimuli distribution across participants {#sec-stimuli-distribution-across-participants}
@@ -438,28 +451,41 @@ This section details how the possible 703 pairwise combinations of the 38 stimul
 
     -   In a case where a batch has 36 blocks, this means that all pairs in this batch would (in theory) be listened to and rated across 18 participants (2 blocks per listener). The order the audio stimuli were presented to individual listeners was then randomised, as was the order of the stimuli pairs.
 
+@fig-pair-summary and @tbl-pairwise-stats provide an overview of the distribution of ratings. On average, each pair was rated 7 times.
+
 ```{r pair-summary-figure}
-# Density plots with semi-transparent fill
-  PW_ratings_ID %>% 
-  group_by(pair_id_unordered) %>% 
-  summarise(PairCount=n()) %>% 
-  ungroup() %>% 
-ggplot(aes(y =PairCount,x="Unordered")) +geom_jitter(alpha=0.2) +geom_boxplot(notch = T,alpha=0.85)+
-  labs(x="Pairs")+
-    scale_y_continuous(breaks =c(2,4,6,8,10,12))
+#| label: fig-pair-summary
+#| fig-cap: "Distribution of pairwise ratings across participants"
+ 
+PW_ratings_ID %>%
+  group_by(pair_id_unordered) %>%
+  summarise(PairCount = n()) %>%
+  ungroup() %>%
+  ggplot(aes(y = PairCount, x = "Unordered")) + geom_jitter(alpha = 0.2) +
+  geom_boxplot(notch = T, alpha = 0.85) +
+  labs(x = "Pairs") +
+  scale_y_continuous(breaks = c(2, 4, 6, 8, 10, 12))
 
 ```
 
 ```{r pair-summary-table}
-ratings_sum <- PW_ratings_ID %>% 
-group_by(pair_id_unordered) %>% 
-summarise(pairCount=n()) 
+#| label: tbl-pairwise-stats
+#| tbl-cap: |
+#|     Mean, median, range, Standard Deviation and variance of the number of ratings for each stimuli pair
 
- ratings_sum %>% 
-   summarise(mean=mean(pairCount),
-             median=median(pairCount),
-             min=min(pairCount),
-             max=max(pairCount))
+ratings_sum <- PW_ratings_ID %>%
+  group_by(pair_id_unordered) %>%
+  summarise(pairCount = n())
+
+ratings_sum %>%
+  summarise(
+    mean = mean(pairCount),
+    median = median(pairCount),
+    min = min(pairCount),
+    max = max(pairCount),
+    SD = sd(pairCount),
+    variance = var(pairCount)
+  )
 ```
 
 # Code for reported results {#sec-code-for-reported-results}
@@ -1713,6 +1739,129 @@ image_write(
   format = "tif",
   density = 600
 )
+```
+
+### Testing our interpretation of the MDS space
+
+In this section, we apply PERMANOVA to test whether the proposed groups in @fig-MDS-output-combined-analysis are statistically distinct. First, we extract the main group each speaker belongs to in the next code chunk.
+
+```{r extract-groups}
+MainGroups <- measures_df %>% 
+  mutate(
+         PC1_tree = case_when(LeaderLaggerScore > -0.065 ~ "Leader", T ~ "Lagger"),
+         speed_tree = case_when(ArticRate < -0.27 ~ "Slow", T ~ "Fast"),
+         pitch_tree = case_when(MeanPitch <= 0.96 ~ "Low", T ~ "High"),
+         pitch_tree2 = case_when(MeanPitch < 0.31 ~ "Low", T ~ "High"),
+         speed_pitch_tree = case_when(
+           speed_tree == "Slow" ~ "Slow",
+           speed_tree == "Fast" & pitch_tree == "Low" ~ "FastLow",
+           T ~ "FastHigh"
+         ),
+         speed_pitch_tree2 = case_when(
+           speed_tree == "Slow" &
+             pitch_tree2 == "Low" ~ "SlowLow",
+           speed_tree == "Slow" &
+             pitch_tree2 == "High" ~ "SlowHigh",
+           speed_tree == "Fast" & pitch_tree2 == "Low" ~ "FastLow",
+           T ~ "FastHigh"
+         ),
+         SlowOrLow = case_when(
+           PC1_tree == "Leader" &
+             (pitch_tree2 == "Low" |
+                speed_tree == "Slow") ~ "SlowOrLowLeader",
+           PC1_tree == "Lagger" &
+             (pitch_tree2 == "Low" |
+                speed_tree == "Slow") ~ "SlowOrLowLagger",
+           T ~ "NotSlowOrLow"
+         ),
+         SlowAndLow = case_when(
+           PC1_tree == "Leader" &
+             (pitch_tree2 == "Low" &
+                speed_tree == "Slow") ~ "SlowAndLowLeader",
+           PC1_tree == "Lagger" &
+             (pitch_tree2 == "Low" &
+                speed_tree == "Slow") ~ "SlowAndLowLagger",
+           T ~ "NotSlowAndLow"
+         ),
+         FastOrHigh = case_when(
+           PC1_tree == "Leader" &
+             (pitch_tree2 == "High" |
+                speed_tree == "Fast") ~ "FastOrHighLeader",
+           PC1_tree == "Lagger" &
+             (pitch_tree2 == "High" |
+                speed_tree == "Fast") ~ "FastOrHighLagger",
+           T ~ "NotFastOrHigh"
+         ),
+         LowAndFast = case_when(
+           PC1_tree == "Leader" &
+             speed_pitch_tree2 == "FastLow" ~ "FastAndLowLeader",
+           PC1_tree == "Lagger" &
+             speed_pitch_tree2 == "FastLow" ~ "FastAndLowLagger",
+           T ~ "NotFastAndLow"
+         ),
+         Main_Groups = case_when(
+           LowAndFast == "FastAndLowLeader" &
+             (D1_PW < 0.6) ~ "Fast and low Leaders",
+           SlowOrLow == "SlowOrLowLeader" &
+             (D1_PW > -0.1) ~ "Slow/low Leaders",
+           (pitch_tree2 == "High" |
+              speed_tree == "Fast") &
+             PC1_tree == "Lagger" & D2_PW > 0.21 ~ "Fast/high Laggers",
+           pitch_tree2 == "High" ~ "High Laggers and Leaders",
+           ((pitch_tree2 == "Low" |
+               speed_tree == "Slow") &
+              PC1_tree == "Lagger" & D2_PW < 0.21
+           ) ~ "Slow/low Laggers"
+         )
+  ) %>% 
+  pull(Main_Groups)
+  
+```
+
+We now apply standard and pairwise PERMANOVA in the next chunk. Standard PERMANOVA tests the null hypothesis that the centroids (mean middle point) and dispersion of our five speaker groups are equivalent. The result indicates that we can reject this null hypothesis, and that our speaker groups are not all equivalent. This application of PERMANOVA does not, however, tell us which groups are distinct from each other. TO investigate this, we apply pairwise PERMANOVA using a wrapper for the `adonis` function.
+
+The pairwise PERMANOVA indicates not all groups are statistically distinct. Instead, the groups surrounding the fast leaders at the centre of the space are statistically distinct from each other. 
+
+```{r apply-PERMANOVA}
+set.seed(1234)
+
+# extract diagonal from our similarity matrix
+df_ID_diag <- as.dist(df_ID, diag = T, upper = F)
+
+# Apply PERMANOVA
+permanova <- adonis2(df_ID_diag ~ MainGroups, data = as.data.frame(MainGroups), permutations = 999)
+
+permanova
+
+# Apply pairwise PERMANOVA
+pw_permanova <- pairwise.adonis(x = df_ID_diag,
+                                  factors= MainGroups,
+                                  p.adjust.m='bonferroni',
+)
+pw_permanova <- as.data.frame(pw_permanova)
+pw_permanova$F.Model <- round(pw_permanova$F.Model, 3)
+pw_permanova$R2 <- round(pw_permanova$R2, 3)
+pw_permanova
+```
+
+Adonis2 may produce artificially low p-values if centroids are similar but the dispersion of each group is different. As such, it is worth checking if the dispersion of our five groups are markedly different. We can again use the `vegan` package to identify the dispersion of each group, and test the null hypothesis that they are equivalent. The results indicate the groups have comparable levels of dispersion, meaning the results of the PERMANOVA are likely driven by differences in group centroids. 
+
+```{r check-disperson}
+# Calculate multivariate dispersions
+dispersion <- betadisper(df_ID_diag, MainGroups, type="centroid")  
+dispersion
+
+plot(dispersion, ellipse = TRUE)
+
+## Perform test
+anova(dispersion)
+
+## Permutation test for F
+p_dispersion <- permutest(dispersion, permutations = 99, pairwise = TRUE)
+p_dispersion
+
+## Tukey's Honest Significant Differences
+(p_dispersion_HSD <- TukeyHSD(p_dispersion))
 ```
 
 ## Predicting pairwise similarity ratings with a GAMM {#sec-gamm-model}
