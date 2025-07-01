@@ -309,7 +309,7 @@ correlogram_function <- function(in_data) {
     tibble::rownames_to_column("Variable1") %>%
     gather("Variable2", "value", -Variable1) %>%
     mutate(
-      value = round(value, digit = 2),
+      value = round(value, digit = 2), 
       value = case_when(Variable1 == Variable2 ~ NA, T ~ value),
       value = gsub("0.", ".", value)
     )
@@ -371,6 +371,7 @@ This section discussions the selection of the audio stimuli used in the task. Th
 [^2]: We note that vowels are counted as being "present" regardless of stress.
 
 ```{r vowel-count}
+#| warning: false
 #| echo: false
 #| label: tbl-vowel-stocktake
 #| column: screen
@@ -415,7 +416,7 @@ VowelCount %>%
   ) %>%
   column_spec(2, width="20cm") %>% 
   scroll_box(width = "100%", height = "500px") %>%
-  add_header_above(c(" ", "", "Leader-Lagger" = 7, "Back Vowel" = 3))
+  add_header_above(c(" ", "","Leader-Lagger" = 7, "Back Vowel" = 3, ""))
 ```
 
 ```{r summarise-vowel-count}
@@ -841,7 +842,7 @@ pitch_PC1_ellipses <- regression_df %>%
     x = "Dimension 1",
     y = "Dimension 2",
     fill = "LL/Pitch",
-    shape = "Pitch"
+    shape = "LL"
   ) +
   guides(fill = guide_legend(override.aes = list(shape = 21))) +
   coord_fixed() +
@@ -1406,6 +1407,16 @@ ggsave(
   height = 1650,
   units = "px"
 )
+
+# Save the image
+ggsave(
+  path = here("Figures"),
+  dpi = 300,
+  filename = "MainGroups.svg",
+  width = 8,
+  height = 5,
+  units = "in"
+)
 ```
 
 The next two code chunks combine, and add text to, the previous figures in this section (the D1 and D2 regression tree outputs, their mapping onto the MDS space, and the interpretation of the overall space). The output is shown in @fig-MDS-output-combined-analysis which is Figure 2 in the manuscript.
@@ -1820,7 +1831,7 @@ MainGroups <- measures_df %>%
 
 We now apply standard and pairwise PERMANOVA in the next chunk. Standard PERMANOVA tests the null hypothesis that the centroids (mean middle point) and dispersion of our five speaker groups are equivalent. The result indicates that we can reject this null hypothesis, and that our speaker groups are not all equivalent. This application of PERMANOVA does not, however, tell us which groups are distinct from each other. TO investigate this, we apply pairwise PERMANOVA using a wrapper for the `adonis` function.
 
-The pairwise PERMANOVA indicates not all groups are statistically distinct. Instead, the groups surrounding the fast leaders at the centre of the space are statistically distinct from each other. 
+The pairwise PERMANOVA indicates not all groups are statistically distinct. Instead, opposing groups on either side of the fast leaders at the centre of the space are statistically distinct from each other. Specifically, fast/high pitch laggers are distinct from slow/low pitch laggers, and slow/low pitch leaders are distinct from both high pitch speakers and fast/high pitch laggers. Finally, slow/low leaders and laggers are significantly different from each other.
 
 ```{r apply-PERMANOVA}
 set.seed(1234)
@@ -1844,14 +1855,11 @@ pw_permanova$R2 <- round(pw_permanova$R2, 3)
 pw_permanova
 ```
 
-Adonis2 may produce artificially low p-values if centroids are similar but the dispersion of each group is different. As such, it is worth checking if the dispersion of our five groups are markedly different. We can again use the `vegan` package to identify the dispersion of each group, and test the null hypothesis that they are equivalent. The results indicate the groups have comparable levels of dispersion, meaning the results of the PERMANOVA are likely driven by differences in group centroids. 
+Adonis2 may produce artificially low p-values if centroids are similar but the dispersion of each group is different. As such, it is worth checking if the dispersion of our five groups are markedly different. We can again use the `vegan` package to identify the dispersion of each group, and test the null hypothesis that they are equivalent. The results indicate the groups have comparable levels of dispersion, meaning the results of the PERMANOVA are likely driven by differences in group centroids.
 
 ```{r check-disperson}
 # Calculate multivariate dispersions
 dispersion <- betadisper(df_ID_diag, MainGroups, type="centroid")  
-dispersion
-
-plot(dispersion, ellipse = TRUE)
 
 ## Perform test
 anova(dispersion)
@@ -2051,7 +2059,8 @@ gamm_estimates %>%
     .smooth %in% c("te(Stim1_ArticRate,Stim2_ArticRate)"),
     .lower_ci > 0 | .upper_ci < 0
   ) %>%
-  ggplot() +
+  mutate(Ratings = case_when(.estimate <0 ~ "Dissimilar",.estimate > 0.1~ "Similar", T ~"")) %>% 
+  ggplot(group=Ratings) +
   geom_contour_filled(aes(
     x = Stim1_ArticRate,
     y = Stim2_ArticRate,
@@ -2067,7 +2076,11 @@ gamm_estimates %>%
     x = "Stim 1 Articulation rate",
     y = "Stim 2 Articulation rate",
     fill = "Similarity Rating"
-  )
+  ) +
+  annotate("label",x=-1.5, y =-1.85, label="Slow/Slow")+
+  annotate("label",x=c(2.25), y =c(2.75), label="Fast/Fast")+
+  annotate("label",x=c(2.25), y =-1.85, label="Fast/Slow")+
+  annotate("label",x=-1.5, y =2.75, label="Slow/Fast")
 ```
 
 #### Mean pitch
@@ -2098,7 +2111,11 @@ gamm_estimates %>%
     x = "Stim 1 Mean pitch",
     y = "Stim 2 Mean pitch",
     fill = "Similarity Rating"
-  )
+  )+
+  annotate("label",x=-1.65, y =-2, label="Low/Low")+
+  annotate("label",x=c(2), y =c(2.25), label="High/High")+
+  annotate("label",x=c(2), y =-2, label="High/Low")+
+  annotate("label",x=-1.65, y =2.25, label="Low/High")
 ```
 
 #### Leader-lagger scores
@@ -2128,7 +2145,11 @@ gamm_estimates %>%
   labs(
     x = "Stim 1 Leader-lagger score", y = "Stim 2 Leader-lagger score", fill =
       "Similarity Rating"
-  )
+  )+
+  annotate("label",x=-2, y =-2.25, label="Lagger/Lagger")+
+  annotate("label",x=c(1.15), y =c(1.65), label="Leader/Leader")+
+  annotate("label",x=c(1.15), y =-2.25, label="Leader/Lagger")+
+  annotate("label",x=-2, y =1.65, label="Lagger/Leader")
 ```
 :::
 
@@ -2159,7 +2180,11 @@ figure_3 <- gamm_estimates %>%
     y = "Stim 2 Articulation rate",
     fill = "Similarity Rating",
     title = "A"
-  ) +
+  )  +
+  annotate("label",x=-1.5, y =-1.85, label="Slow/Slow")+
+  annotate("label",x=c(2.25), y =c(2.75), label="Fast/Fast")+
+  annotate("label",x=c(2.25), y =-1.85, label="Fast/Slow")+
+  annotate("label",x=-1.5, y =2.75, label="Slow/Fast")+
   gamm_estimates %>%
   filter(
     .smooth %in% c("te(Stim1_MeanPitch,Stim2_MeanPitch)"),
@@ -2182,7 +2207,11 @@ figure_3 <- gamm_estimates %>%
     y = "Stim 2 Mean pitch",
     fill = "Similarity Rating",
     title = "B"
-  )
+  )+
+  annotate("label",x=-1.65, y =-2, label="Low/Low")+
+  annotate("label",x=c(2), y =c(2.25), label="High/High")+
+  annotate("label",x=c(2), y =-2, label="High/Low")+
+  annotate("label",x=-1.65, y =2.25, label="Low/High")
 
 # Save figure 3 as png
 ggsave(
@@ -2224,7 +2253,11 @@ figure_4 <- gamm_estimates %>%
   labs(
     x = "Stim 1 Leader-lagger score", y = "Stim 2 Leader-lagger score", fill =
       "Similarity Rating"
-  )
+  )+
+  annotate("label",x=-2, y =-2.25, label="Lagger/Lagger")+
+  annotate("label",x=c(1.15), y =c(1.65), label="Leader/Leader")+
+  annotate("label",x=c(1.15), y =-2.25, label="Leader/Lagger")+
+  annotate("label",x=-2, y =1.65, label="Lagger/Leader")
 
 # Save figure 4 as png
 ggsave(
