@@ -1759,71 +1759,74 @@ In this section, we apply PERMANOVA to test whether the proposed groups in @fig-
 ```{r extract-groups}
 MainGroups <- measures_df %>% 
   mutate(
-         PC1_tree = case_when(LeaderLaggerScore > -0.065 ~ "Leader", T ~ "Lagger"),
-         speed_tree = case_when(ArticRate < -0.27 ~ "Slow", T ~ "Fast"),
-         pitch_tree = case_when(MeanPitch <= 0.96 ~ "Low", T ~ "High"),
-         pitch_tree2 = case_when(MeanPitch < 0.31 ~ "Low", T ~ "High"),
-         speed_pitch_tree = case_when(
-           speed_tree == "Slow" ~ "Slow",
-           speed_tree == "Fast" & pitch_tree == "Low" ~ "FastLow",
-           T ~ "FastHigh"
-         ),
-         speed_pitch_tree2 = case_when(
-           speed_tree == "Slow" &
-             pitch_tree2 == "Low" ~ "SlowLow",
-           speed_tree == "Slow" &
-             pitch_tree2 == "High" ~ "SlowHigh",
-           speed_tree == "Fast" & pitch_tree2 == "Low" ~ "FastLow",
-           T ~ "FastHigh"
-         ),
-         SlowOrLow = case_when(
-           PC1_tree == "Leader" &
-             (pitch_tree2 == "Low" |
-                speed_tree == "Slow") ~ "SlowOrLowLeader",
-           PC1_tree == "Lagger" &
-             (pitch_tree2 == "Low" |
-                speed_tree == "Slow") ~ "SlowOrLowLagger",
-           T ~ "NotSlowOrLow"
-         ),
-         SlowAndLow = case_when(
-           PC1_tree == "Leader" &
-             (pitch_tree2 == "Low" &
-                speed_tree == "Slow") ~ "SlowAndLowLeader",
-           PC1_tree == "Lagger" &
-             (pitch_tree2 == "Low" &
-                speed_tree == "Slow") ~ "SlowAndLowLagger",
-           T ~ "NotSlowAndLow"
-         ),
-         FastOrHigh = case_when(
-           PC1_tree == "Leader" &
-             (pitch_tree2 == "High" |
-                speed_tree == "Fast") ~ "FastOrHighLeader",
-           PC1_tree == "Lagger" &
-             (pitch_tree2 == "High" |
-                speed_tree == "Fast") ~ "FastOrHighLagger",
-           T ~ "NotFastOrHigh"
-         ),
-         LowAndFast = case_when(
-           PC1_tree == "Leader" &
-             speed_pitch_tree2 == "FastLow" ~ "FastAndLowLeader",
-           PC1_tree == "Lagger" &
-             speed_pitch_tree2 == "FastLow" ~ "FastAndLowLagger",
-           T ~ "NotFastAndLow"
-         ),
-         Main_Groups = case_when(
-           LowAndFast == "FastAndLowLeader" &
-             (D1_PW < 0.6) ~ "Fast and low Leaders",
-           SlowOrLow == "SlowOrLowLeader" &
-             (D1_PW > -0.1) ~ "Slow/low Leaders",
-           (pitch_tree2 == "High" |
-              speed_tree == "Fast") &
-             PC1_tree == "Lagger" & D2_PW > 0.21 ~ "Fast/high Laggers",
-           pitch_tree2 == "High" ~ "High Laggers and Leaders",
-           ((pitch_tree2 == "Low" |
-               speed_tree == "Slow") &
-              PC1_tree == "Lagger" & D2_PW < 0.21
-           ) ~ "Slow/low Laggers"
-         )
+   PC1_tree = case_when(
+     LeaderLaggerScore > -0.065 ~ "Leader", 
+     .default = "Lagger"
+    ),
+   speed_tree = case_when(ArticRate < -0.27 ~ "Slow", .default = "Fast"),
+   pitch_tree = case_when(MeanPitch <= 0.96 ~ "Low", .default = "High"),
+   pitch_tree2 = case_when(MeanPitch < 0.31 ~ "Low", .default = "High"),
+   speed_pitch_tree = case_when(
+     speed_tree == "Slow" ~ "Slow",
+     speed_tree == "Fast" & pitch_tree == "Low" ~ "FastLow",
+     .default = "FastHigh"
+   ),
+   speed_pitch_tree2 = case_when(
+     speed_tree == "Slow" &
+       pitch_tree2 == "Low" ~ "SlowLow",
+     speed_tree == "Slow" &
+       pitch_tree2 == "High" ~ "SlowHigh",
+     speed_tree == "Fast" & pitch_tree2 == "Low" ~ "FastLow",
+     .default = "FastHigh"
+   ),
+   SlowOrLow = case_when(
+     PC1_tree == "Leader" &
+       (pitch_tree2 == "Low" |
+          speed_tree == "Slow") ~ "SlowOrLowLeader",
+     PC1_tree == "Lagger" &
+       (pitch_tree2 == "Low" |
+          speed_tree == "Slow") ~ "SlowOrLowLagger",
+     .default = "NotSlowOrLow"
+   ),
+   SlowAndLow = case_when(
+     PC1_tree == "Leader" &
+       (pitch_tree2 == "Low" &
+          speed_tree == "Slow") ~ "SlowAndLowLeader",
+     PC1_tree == "Lagger" &
+       (pitch_tree2 == "Low" &
+          speed_tree == "Slow") ~ "SlowAndLowLagger",
+     .default = "NotSlowAndLow"
+   ),
+   FastOrHigh = case_when(
+     PC1_tree == "Leader" &
+       (pitch_tree2 == "High" |
+          speed_tree == "Fast") ~ "FastOrHighLeader",
+     PC1_tree == "Lagger" &
+       (pitch_tree2 == "High" |
+          speed_tree == "Fast") ~ "FastOrHighLagger",
+     .default = "NotFastOrHigh"
+   ),
+   LowAndFast = case_when(
+     PC1_tree == "Leader" &
+       speed_pitch_tree2 == "FastLow" ~ "FastAndLowLeader",
+     PC1_tree == "Lagger" &
+       speed_pitch_tree2 == "FastLow" ~ "FastAndLowLagger",
+     .default = "NotFastAndLow"
+   ),
+   Main_Groups = case_when(
+     LowAndFast == "FastAndLowLeader" &
+       (D1_PW < 0.6) ~ "Fast and low Leaders",
+     SlowOrLow == "SlowOrLowLeader" &
+       (D1_PW > -0.1) ~ "Slow/low Leaders",
+     (pitch_tree2 == "High" |
+        speed_tree == "Fast") &
+       PC1_tree == "Lagger" & D2_PW > 0.21 ~ "Fast/high Laggers",
+     pitch_tree2 == "High" ~ "High Laggers and Leaders",
+     ((pitch_tree2 == "Low" |
+         speed_tree == "Slow") &
+        PC1_tree == "Lagger" & D2_PW < 0.21
+     ) ~ "Slow/low Laggers"
+   )
   ) %>% 
   pull(Main_Groups)
   
@@ -1836,7 +1839,7 @@ The pairwise PERMANOVA indicates not all groups are statistically distinct. Inst
 ```{r apply-PERMANOVA}
 set.seed(1234)
 
-# extract diagonal from our similarity matrix
+# extract distances as lower triangular matrix with diagonals.
 df_ID_diag <- as.dist(df_ID, diag = T, upper = F)
 
 # Apply PERMANOVA
@@ -1869,7 +1872,7 @@ p_dispersion <- permutest(dispersion, permutations = 99, pairwise = TRUE)
 p_dispersion
 
 ## Tukey's Honest Significant Differences
-(p_dispersion_HSD <- TukeyHSD(p_dispersion))
+dispersion_HSD <- TukeyHSD(dispersion)
 ```
 
 ## Predicting pairwise similarity ratings with a GAMM {#sec-gamm-model}
