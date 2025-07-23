@@ -1,5 +1,4 @@
 ---
-tatus---
 title: "Do 'leaders' sound different from 'laggers? Exploring the perceptual similarity of New Zealand English voices: Supplementary Materials"
 author:   
   - name: Elena Sheard
@@ -73,29 +72,49 @@ editor:
 
 # Overview
 
-This is the current version of the supplementary materials for the manuscript "Do 'leaders' sound different from 'laggers'? Exploring the perceptual similarity of New Zealand English voices". The manuscript presents the results from an online pairwise similarity rating task, in which New Zealanders rated the perceived similarity of pairs of New Zealand English speakers. The pre-registration for this analysis can be accessed [here](https://aspredicted.org/wny4-7mz2.pdf).
+This is the current version of the supplementary materials for the
+manuscript "Do 'leaders' sound different from 'laggers'? Exploring the
+perceptual similarity of New Zealand English voices". The manuscript
+presents the results from an online pairwise similarity rating task, in
+which New Zealanders rated the perceived similarity of pairs of New
+Zealand English speakers. The pre-registration for this analysis can be
+accessed [here](https://aspredicted.org/wny4-7mz2.pdf).
 
 The materials have the following structure:
 
--   @sec-libraries-and-dataframes loads the R packages and data frames used in the analysis
+-   @sec-libraries-and-dataframes loads the R packages and data frames
+    used in the analysis
 
--   @sec-audio-stimuli presents transcripts of the audio stimuli used in the pairwise similarity rating task, and a stock take of the monophthongs present in each stimulus.
+-   @sec-audio-stimuli presents transcripts of the audio stimuli used in
+    the pairwise similarity rating task, and a stock take of the
+    monophthongs present in each stimulus.
 
--   @sec-stimuli-distribution-across-participants describes how the stimuli pair subsets were distributed across participants in the pairwise rating task.
+-   @sec-stimuli-distribution-across-participants describes how the
+    stimuli pair subsets were distributed across participants in the
+    pairwise rating task.
 
--   @sec-code-for-reported-results contains the code for the results and figures reported in the manuscript, specifically:
+-   @sec-code-for-reported-results contains the code for the results and
+    figures reported in the manuscript, specifically:
 
     -   Fitting the reported MDS analysis in @sec-MDS-analysis
 
-    -   Predicting MDS dimensions in @sec-predicting-mds-dimensions-with-regression-trees
+    -   Predicting MDS dimensions in
+        @sec-predicting-mds-dimensions-with-regression-trees
 
     -   Predicting pairwise similarity ratings in @sec-gamm-model
 
--   @sec-testing-pre-registered-correlations presents the pre-registered correlations between the MDS dimensions and independent variables.
+-   @sec-testing-pre-registered-correlations presents the pre-registered
+    correlations between the MDS dimensions and independent variables.
 
--   Finally, @sec-comparing-across-reported-and-pre-registered-results discusses our data filtering decisions and presents the same analyses applied in @sec-code-for-reported-results to the experiment data filtered according to the pre-registration.
+-   Finally, @sec-comparing-across-reported-and-pre-registered-results
+    discusses our data filtering decisions and presents the same
+    analyses applied in @sec-code-for-reported-results to the experiment
+    data filtered according to the pre-registration.
 
-If you would like to see how we scaled participant similarity ratings and created the similarity matrices used in this file, please refer to the Generate-data-frames.qmd script in the github repository or at this [link](https://nzilbb.github.io/qb-pairwise-public/Markdown/Generate-data-frames.html).
+If you would like to see how we scaled participant similarity ratings
+and created the similarity matrices used in this file, please refer to
+the Generate-data-frames.qmd script in the github repository or at this
+[link](https://nzilbb.github.io/qb-pairwise-public/Markdown/Generate-data-frames.html).
 
 # Libraries and dataframes {#sec-libraries-and-dataframes}
 
@@ -155,7 +174,8 @@ library(grateful) # write package citations at end of document
 
 2.  Similarity matrices (for both reported and pre-registered filtering)
 
-3.  Individual pairwise similarity ratings (for both reported and pre-registered filtering)
+3.  Individual pairwise similarity ratings (for both reported and
+    pre-registered filtering)
 
 4.  Converts similarity matrices to dissimilarity matrices for MDS.
 
@@ -256,14 +276,18 @@ VowelCount <- read_rds(here(
 ::: {.callout-info collapse="true"}
 ### Session information
 
-Here are the full details of system and packages used to run this analysis:
+Here are the full details of system and packages used to run this
+analysis:
 
 ```{r session-info}
 sessionInfo()
 ```
 :::
 
-The code chunk below contains a custom function that creates a new column indicating whether a value in a specified column is above, below, or in between, a specified standard deviation, and applies a label to each of the three categories.
+The code chunk below contains a custom function that creates a new
+column indicating whether a value in a specified column is above, below,
+or in between, a specified standard deviation, and applies a label to
+each of the three categories.
 
 ```{r load-sd-function}
 # Function to classify numeric variable as categorically low, middle or high in distribution
@@ -281,7 +305,10 @@ sd_calculate <- function(orig_column, value, options) {
 }
 ```
 
-The code chunk below contains a custom function that creates a correlogram in which the values in the bottom diagonal of the correlogram represent the correlation coefficients, and the values in the upper diagonal represent the p-values.
+The code chunk below contains a custom function that creates a
+correlogram in which the values in the bottom diagonal of the
+correlogram represent the correlation coefficients, and the values in
+the upper diagonal represent the p-values.
 
 ```{r correlogram-function}
 correlogram_function <- function(in_data) {
@@ -360,15 +387,47 @@ correlogram_function <- function(in_data) {
 
 ## Stimuli selection {#sec-stimuli-selection}
 
-This section discussions the selection of the audio stimuli used in the task. The stimuli were selected from a subset of the monologues in the QuakeBox corpus, specifically from Pākehā[^1] women aged 46-55. In selecting the stimuli from the monologues, at least half of the 10 monophthongs had to be present. Stimuli were also selected based on content; many, if not all, of the stories told in the corpus have upsetting aspects to them which we did not want to expose our participants to, especially as some of them may have experienced the earthquake themselves. As such, we focused on more positive parts of the recordings, like the sense of community or amusing aspects of their experiences, and, where this was not possible, we ensured that the clips were not explicitly negative (i.e., while some clips talk about damage to property, none talk about death or traumatic personal events). We also ensured that the clips did not contain information that would give an indication as to the speakers' social backgrounds (e.g., occupation, specific suburbs, schools). The content of one stimulus was edited to remove references to her China plates (30). In some instances, inter-word pauses were also reduced to bring the length of the clip below 10 seconds. We also normalised the intensity of all clips to 70 dB in Praat [@RN609] to ensure consistency for listeners.
+This section discussions the selection of the audio stimuli used in the
+task. The stimuli were selected from a subset of the monologues in the
+QuakeBox corpus, specifically from Pākehā[^1] women aged 46-55. In
+selecting the stimuli from the monologues, at least half of the 10
+monophthongs had to be present. Stimuli were also selected based on
+content; many, if not all, of the stories told in the corpus have
+upsetting aspects to them which we did not want to expose our
+participants to, especially as some of them may have experienced the
+earthquake themselves. As such, we focused on more positive parts of the
+recordings, like the sense of community or amusing aspects of their
+experiences, and, where this was not possible, we ensured that the clips
+were not explicitly negative (i.e., while some clips talk about damage
+to property, none talk about death or traumatic personal events). We
+also ensured that the clips did not contain information that would give
+an indication as to the speakers' social backgrounds (e.g., occupation,
+specific suburbs, schools). The content of one stimulus was edited to
+remove references to her China plates (30). In some instances,
+inter-word pauses were also reduced to bring the length of the clip
+below 10 seconds. We also normalised the intensity of all clips to 70 dB
+in Praat [@RN609] to ensure consistency for listeners.
 
 [^1]: New Zealand European.
 
 ## Transcriptions and vowel stock take {#sec-transcriptions-and-vowel-stock-take}
 
-@tbl-vowel-stocktake contains the transcriptions for all 38 audio stimuli used in the online task. The table indicates whether each of the 10 NZE monophthongs considered in @RN506 is present in the stimuli (1 = present, 0 = absent).[^2] The table also counts the total number of monophthongs represented in each stimulus (e.g., a 5 indicates 5 of the 10 monophthongs are present in a stimulus) and the total number of stimuli in which each monophthong is represented. At least 6 of the 10 monophthongs are present in each stimuli (median = 8, mean = 8.13). The vowels from the leader-lagger continuum are more reliably represented than the vowels in the back-vowel configuration, largely due to the low occurrences of [start]{.smallcaps} across the stimuli. We also note the [strut]{.smallcaps} F1 is loaded onto the leader-lagger continuum while [strut]{.smallcaps} F2 is loaded onto the back vowel configuration.
+@tbl-vowel-stocktake contains the transcriptions for all 38 audio
+stimuli used in the online task. The table indicates whether each of the
+10 NZE monophthongs considered in @RN506 is present in the stimuli (1 =
+present, 0 = absent).[^2] The table also counts the total number of
+monophthongs represented in each stimulus (e.g., a 5 indicates 5 of the
+10 monophthongs are present in a stimulus) and the total number of
+stimuli in which each monophthong is represented. At least 6 of the 10
+monophthongs are present in each stimuli (median = 8, mean = 8.13). The
+vowels from the leader-lagger continuum are more reliably represented
+than the vowels in the back-vowel configuration, largely due to the low
+occurrences of [start]{.smallcaps} across the stimuli. We also note the
+[strut]{.smallcaps} F1 is loaded onto the leader-lagger continuum while
+[strut]{.smallcaps} F2 is loaded onto the back vowel configuration.
 
-[^2]: We note that vowels are counted as being "present" regardless of stress.
+[^2]: We note that vowels are counted as being "present" regardless of
+    stress.
 
 ```{r vowel-count}
 #| warning: false
@@ -431,28 +490,67 @@ VowelCount %>%
 
 # Stimuli distribution across participants {#sec-stimuli-distribution-across-participants}
 
-This section details how the possible 703 pairwise combinations of the 38 stimuli were distributed across participants in the experiment design. Each participant listened to two 'blocks' of 19 stimuli. In each block, each speaker would be heard once. A simple random sampling of stimuli for each participant would have resulted in an uneven distribution of rating counts for each pair, with some pairs likely to never be rated at all. We instead used a semi-random sampling procedure that distributed the possible combinations of stimuli pairs as evenly as possible across the stimuli subsets participants heard. In effect, for approximately every 18 participants all 703 stimuli pairs are listened to once. Participant drop-out meant that, in practice, the overall distribution of the possible pairwise combinations was not as even as intended.
+This section details how the possible 703 pairwise combinations of the
+38 stimuli were distributed across participants in the experiment
+design. Each participant listened to two 'blocks' of 19 stimuli. In each
+block, each speaker would be heard once. A simple random sampling of
+stimuli for each participant would have resulted in an uneven
+distribution of rating counts for each pair, with some pairs likely to
+never be rated at all. We instead used a semi-random sampling procedure
+that distributed the possible combinations of stimuli pairs as evenly as
+possible across the stimuli subsets participants heard. In effect, for
+approximately every 18 participants all 703 stimuli pairs are listened
+to once. Participant drop-out meant that, in practice, the overall
+distribution of the possible pairwise combinations was not as even as
+intended.
 
-1.  An initial block of 19 stimuli pairs is created by randomly sorting all 38 stimuli, then assigning the first half of the list to the second half (i.e., the first stimulus would be paired with the twentieth stimulus, the second with the twenty-first). Each speaker is, therefore, only represented once in the block.
+1.  An initial block of 19 stimuli pairs is created by randomly sorting
+    all 38 stimuli, then assigning the first half of the list to the
+    second half (i.e., the first stimulus would be paired with the
+    twentieth stimulus, the second with the twenty-first). Each speaker
+    is, therefore, only represented once in the block.
 
-2.  The stimuli pairs included in this initial block are removed from the list of 703 possible pairwise combinations.
+2.  The stimuli pairs included in this initial block are removed from
+    the list of 703 possible pairwise combinations.
 
-3.  The stimuli in the reduced list of available pairwise combinations are shuffled again. The next block of 19 pairs is selected from this shuffled list, with the condition that each stimulus is again represented only once in the block.
+3.  The stimuli in the reduced list of available pairwise combinations
+    are shuffled again. The next block of 19 pairs is selected from this
+    shuffled list, with the condition that each stimulus is again
+    represented only once in the block.
 
-4.  The stimuli pairs in this next block of 19 pairs are then removed from the reduced list of possible pairwise combinations
+4.  The stimuli pairs in this next block of 19 pairs are then removed
+    from the reduced list of possible pairwise combinations
 
-5.  Steps 3 and 4 are repeated until as many of the possible 703 combinations have been assigned to as many complete lists of 19 stimuli as possible
+5.  Steps 3 and 4 are repeated until as many of the possible 703
+    combinations have been assigned to as many complete lists of 19
+    stimuli as possible
 
-6.  Steps 1 to 5 are repeated to create multiple 'batches', where each batch is a collection of unique blocks (of 19 stimuli pairs) that cover as many of the possible 703 pairwise combinations as possible.
+6.  Steps 1 to 5 are repeated to create multiple 'batches', where each
+    batch is a collection of unique blocks (of 19 stimuli pairs) that
+    cover as many of the possible 703 pairwise combinations as possible.
 
-    -   While it is, hypothetically, possible for the 703 pairs to be evenly divided into 37 unique blocks of 19 stimuli pairs, the requirement that each speaker be only heard once per block meant that there was a range of 33 to 37 unique blocks (i.e., 627-703 stimuli pairs) per batch.
-    -   Nonetheless, at least 90% of possible pairs were accounted for in each batch, making it unlikely that the pairs not included in one batch are also not included in others.
+    -   While it is, hypothetically, possible for the 703 pairs to be
+        evenly divided into 37 unique blocks of 19 stimuli pairs, the
+        requirement that each speaker be only heard once per block meant
+        that there was a range of 33 to 37 unique blocks (i.e., 627-703
+        stimuli pairs) per batch.
+    -   Nonetheless, at least 90% of possible pairs were accounted for
+        in each batch, making it unlikely that the pairs not included in
+        one batch are also not included in others.
 
-7.  The blocks in the first half of each batch were then assigned to List A, and the blocks in the second half of each batch were assigned to List B. Each participant listens to a List A and List B block from the same batch.
+7.  The blocks in the first half of each batch were then assigned to
+    List A, and the blocks in the second half of each batch were
+    assigned to List B. Each participant listens to a List A and List B
+    block from the same batch.
 
-    -   In a case where a batch has 36 blocks, this means that all pairs in this batch would (in theory) be listened to and rated across 18 participants (2 blocks per listener). The order the audio stimuli were presented to individual listeners was then randomised, as was the order of the stimuli pairs.
+    -   In a case where a batch has 36 blocks, this means that all pairs
+        in this batch would (in theory) be listened to and rated across
+        18 participants (2 blocks per listener). The order the audio
+        stimuli were presented to individual listeners was then
+        randomised, as was the order of the stimuli pairs.
 
-@fig-pair-summary and @tbl-pairwise-stats provide an overview of the distribution of ratings. On average, each pair was rated 7 times.
+@fig-pair-summary and @tbl-pairwise-stats provide an overview of the
+distribution of ratings. On average, each pair was rated 7 times.
 
 ```{r pair-summary-figure}
 #| label: fig-pair-summary
@@ -493,13 +591,48 @@ ratings_sum %>%
 
 ## Fitting the reported MDS (Spline) {#sec-MDS-analysis}
 
-Like Principal Component Analysis, Multi-dimensional Scaling (MDS) is a dimension-reduction technique. While its implementation in sociolinguistics is comparatively limited [e.g., @RN586; @RN589], the technique has a strong precedent of application to questions of perceived similarity in disciplines such as psychology and forensic linguistics. This is because MDS is highly suited to (dis)similarity data; it reduces measures of (dis)similarity between pairs of objects (in our case, speakers) to a smaller number of perceptual dimensions. In theory, the resulting perceptual space corresponds to the cues or factors in production that listeners use to perceptually differentiate between speakers (e.g., pitch, vowel patterns).
+Like Principal Component Analysis, Multi-dimensional Scaling (MDS) is a
+dimension-reduction technique. While its implementation in
+sociolinguistics is comparatively limited [e.g., @RN586; @RN589], the
+technique has a strong precedent of application to questions of
+perceived similarity in disciplines such as psychology and forensic
+linguistics. This is because MDS is highly suited to (dis)similarity
+data; it reduces measures of (dis)similarity between pairs of objects
+(in our case, speakers) to a smaller number of perceptual dimensions. In
+theory, the resulting perceptual space corresponds to the cues or
+factors in production that listeners use to perceptually differentiate
+between speakers (e.g., pitch, vowel patterns).
 
-MDS requires a dissimilarity matrix as input. We first generated a square pairwise 38 x 38 matrix (one row and one column per stimuli) which represents the similarity between each pair of speakers obtained from our experimental data (see Generate-data-frames.qmd). We scaled the pairwise similarity ratings per participant, and then took the mean rating for each stimuli pair across all participants. However, as MDS requires all numbers in the input matrix to be above 0, the individual scaled ratings were all brought above 0 by adding the minimum score to all ratings before calculating the mean. This mean-scaled similarity rating is the value in the similarity matrix. The similarity matrix was then converted to a dissimilarity matrix using the 'reverse' option from the `sim2diss()` function in the `smacofR` package [@RN724]. Using this dissimilarity matrix, we implemented an *mspline* MDS, with five knots and third degree polynomials. This is one way to allow for a non-linear relationship between perceptual dissimilarity ratings and the resulting distances between speakers generated by MDS. There is no *a priori* reason for us to assume that this relationship in linear.
+MDS requires a dissimilarity matrix as input. We first generated a
+square pairwise 38 x 38 matrix (one row and one column per stimuli)
+which represents the similarity between each pair of speakers obtained
+from our experimental data (see Generate-data-frames.qmd). We scaled the
+pairwise similarity ratings per participant, and then took the mean
+rating for each stimuli pair across all participants. However, as MDS
+requires all numbers in the input matrix to be above 0, the individual
+scaled ratings were all brought above 0 by adding the minimum score to
+all ratings before calculating the mean. This mean-scaled similarity
+rating is the value in the similarity matrix. The similarity matrix was
+then converted to a dissimilarity matrix using the 'reverse' option from
+the `sim2diss()` function in the `smacofR` package [@RN724]. Using this
+dissimilarity matrix, we implemented an *mspline* MDS, with five knots
+and third degree polynomials. This is one way to allow for a non-linear
+relationship between perceptual dissimilarity ratings and the resulting
+distances between speakers generated by MDS. There is no *a priori*
+reason for us to assume that this relationship in linear.
 
 ### Selecting the number of dimensions
 
-To apply MDS, we must specify the number of dimensions we wish the data to be reduced to. Here, we introduce a novel method to help inform the choice of dimensions. This method is an alternative to relying solely on individual stress values. Stress is a measure of the fit of an MDS, with a lower stress value corresponding to a better fitting analysis. However, as @fig-mds-scree illustrates, stress will *always* decrease as the number of dimensions increases (i.e., 4 dimensions will always have a lower stress than 3, which will always have a lower stress than 2). As such, we do not consider relying on a single stress value to be best practice [following @RN620].
+To apply MDS, we must specify the number of dimensions we wish the data
+to be reduced to. Here, we introduce a novel method to help inform the
+choice of dimensions. This method is an alternative to relying solely on
+individual stress values. Stress is a measure of the fit of an MDS, with
+a lower stress value corresponding to a better fitting analysis.
+However, as @fig-mds-scree illustrates, stress will *always* decrease as
+the number of dimensions increases (i.e., 4 dimensions will always have
+a lower stress than 3, which will always have a lower stress than 2). As
+such, we do not consider relying on a single stress value to be best
+practice [following @RN620].
 
 ```{r scree-plot}
 #| label: fig-mds-scree
@@ -526,13 +659,39 @@ stress_plot %>%
   geom_line()
 ```
 
-We instead take an approach to dimension selection which is analogous to the permutation and bootstrapping approach developed by @RN002 and applied to vocalic co-variation by @nzilbbvowels. We implemented this method via another custom function in the `nzilbb.vowels` `R` package .
+We instead take an approach to dimension selection which is analogous to
+the permutation and bootstrapping approach developed by @RN002 and
+applied to vocalic co-variation by @nzilbbvowels. We implemented this
+method via another custom function in the `nzilbb.vowels` `R` package .
 
-Our aim is to ensure that we do not specify a number of dimensions that is *too low.* To inform this decision, the function below compares the reductions in stress from the addition of a dimension to the MDS analysis in our data to that obtained by chance. Specifically, the function permutes the dissimilarity matrix (randomises the order of the values in each row) to break the association between speakers and calculates the reduction in stress achieved with each additional dimension. By repeating the process 100 times, we can approximate the distribution of stress reduction we would expect were there no structure in the data. We then compare this with a distribution of stress reduction we expect from the experimental data, generated by rerunning the analysis 100 times on subsets of the data (i.e., bootstrapping). We can, therefore, confirm that we have at least the number of dimensions which result in more stress reduction than by chance (i.e., in the permuted data).
+Our aim is to ensure that we do not specify a number of dimensions that
+is *too low.* To inform this decision, the function below compares the
+reductions in stress from the addition of a dimension to the MDS
+analysis in our data to that obtained by chance. Specifically, the
+function permutes the dissimilarity matrix (randomises the order of the
+values in each row) to break the association between speakers and
+calculates the reduction in stress achieved with each additional
+dimension. By repeating the process 100 times, we can approximate the
+distribution of stress reduction we would expect were there no structure
+in the data. We then compare this with a distribution of stress
+reduction we expect from the experimental data, generated by rerunning
+the analysis 100 times on subsets of the data (i.e., bootstrapping). We
+can, therefore, confirm that we have at least the number of dimensions
+which result in more stress reduction than by chance (i.e., in the
+permuted data).
 
-We plot the results of this function in @fig-mds-dim This figure plots the reduction in stress as the number of dimensions increased for both the bootstrapped and randomised/permuted data. @fig-mds-dim suggests we need at least one dimension, with the black cross sitting somewhat higher than the null distribution for two dimensions. The test indicates we aren't including *too few* dimensions if we run a two-dimensional MDS on this data.
+We plot the results of this function in @fig-mds-dim This figure plots
+the reduction in stress as the number of dimensions increased for both
+the bootstrapped and randomised/permuted data. @fig-mds-dim suggests we
+need at least one dimension, with the black cross sitting somewhat
+higher than the null distribution for two dimensions. The test indicates
+we aren't including *too few* dimensions if we run a two-dimensional MDS
+on this data.
 
-We therefore run an MDS with two dimensions using the `smacofSym()` function from the `smacofR` package [@RN724]. The space defined by these two dimensions, theoretically, correspond to the acoustic cues listeners used when grouping the speakers.
+We therefore run an MDS with two dimensions using the `smacofSym()`
+function from the `smacofR` package [@RN724]. The space defined by these
+two dimensions, theoretically, correspond to the acoustic cues listeners
+used when grouping the speakers.
 
 ```{r calculate-MDS-stress-reduction}
 #| label: fig-mds-dim
@@ -561,7 +720,11 @@ plot_mds_test(full_test) +
 
 ### Selecting best-fitting analysis based on best random start
 
-Following @RN620, the reported MDS in the manuscript is the random start solution with the lowest stress values from 100 random starts. The code chunk below runs 100 MDS analyses with random starts (all two-dimensional M-spline MDS analyses, with five knots and third-degree polynomials) on our dissimilarity matrix.
+Following @RN620, the reported MDS in the manuscript is the random start
+solution with the lowest stress values from 100 random starts. The code
+chunk below runs 100 MDS analyses with random starts (all
+two-dimensional M-spline MDS analyses, with five knots and third-degree
+polynomials) on our dissimilarity matrix.
 
 ```{r determine-random-start}
 set.seed(200)
@@ -587,7 +750,17 @@ fit_df_ID
 
 ### Informal significance test assessing fit of final MDS
 
-Also following @RN620, we apply an informal significance test in @fig-significanceTest to gain insight into the fit of the reported MDS. The `permtest` function from the `smacof` package calculates the stress for 500 permuted iterations of the data frame, with the distribution of the permuted stress values visualised in @fig-significanceTest The solid line then corresponds to the actual stress value of our reported MDS analysis, while the dotted line corresponds to the lower 5% quantile. As the actual stress value is lower than the dotted line, albeit marginally, it is lower than the 95% of the stress values from the analyses run on the permuted data (i.e., is informally equivalent to a *p-*value \<0.05).
+Also following @RN620, we apply an informal significance test in
+@fig-significanceTest to gain insight into the fit of the reported MDS.
+The `permtest` function from the `smacof` package calculates the stress
+for 500 permuted iterations of the data frame, with the distribution of
+the permuted stress values visualised in @fig-significanceTest The solid
+line then corresponds to the actual stress value of our reported MDS
+analysis, while the dotted line corresponds to the lower 5% quantile. As
+the actual stress value is lower than the dotted line, albeit
+marginally, it is lower than the 95% of the stress values from the
+analyses run on the permuted data (i.e., is informally equivalent to a
+*p-*value \<0.05).
 
 ```{r informal-significance-test}
 #| label: fig-significanceTest
@@ -621,11 +794,20 @@ abline(v = perm5, lty = 2) ## critical value (dashed)
 abline(v = fit_df_ID$stress)
 ```
 
-The insights from @fig-mds-dim and @fig-significanceTest provide us with sufficient evidence to support an MDS with two dimensions.
+The insights from @fig-mds-dim and @fig-significanceTest provide us with
+sufficient evidence to support an MDS with two dimensions.
 
 ### Shepard and bubble plot
 
-@fig-shepard displays a Shephard diagram of the reported MDS analysis. @fig-bubble instead displays a "bubble" plot of the stress-per-point (SPP) of the individual objects (i.e., speakers) in the data. The larger the 'bubble' for each speaker, the more they contribute to the misfit of the MDS (i.e., the higher their SPP). All speakers have an SPP below 5% (min = 1.76, max = 4.6). Speakers 2, 37 and 25 have the highest SPP values (\>4), but are all within 3 standard deviations of the mean SPP value (4.83). Given they also do not inhibit the interpretability of the perceptual similarity space, we proceed with the reported MDS analysis.
+@fig-shepard displays a Shephard diagram of the reported MDS analysis.
+@fig-bubble instead displays a "bubble" plot of the stress-per-point
+(SPP) of the individual objects (i.e., speakers) in the data. The larger
+the 'bubble' for each speaker, the more they contribute to the misfit of
+the MDS (i.e., the higher their SPP). All speakers have an SPP below 5%
+(min = 1.76, max = 4.6). Speakers 2, 37 and 25 have the highest SPP
+values (\>4), but are all within 3 standard deviations of the mean SPP
+value (4.83). Given they also do not inhibit the interpretability of the
+perceptual similarity space, we proceed with the reported MDS analysis.
 
 ```{r shephard-plot}
 #| label: fig-shepard
@@ -652,7 +834,9 @@ print(paste(
 
 ### Extracting speaker scores
 
-We can now extract the "coordinates" of each speaker from the results of the MDS and combine them with measures of speaker production from the QuakeBox.
+We can now extract the "coordinates" of each speaker from the results of
+the MDS and combine them with measures of speaker production from the
+QuakeBox.
 
 ```{r extract-MDS-scores}
 conf_PW_ID <- fit_df_ID$conf
@@ -666,7 +850,12 @@ measures_df <- measures_df %>%
   right_join(dimensions_PW, by = c("SpeakerId" = "Speaker"))
 ```
 
-These coordinates capture each speaker's position within the MDS space and can be mapped visually in two dimensions as in @fig-MDS-output (Figure 1 in the manuscript). Stimuli that are close to one another (e.g., speaker 3 and 4) are perceived to sound more similar to one another, and stimuli that are far apart (e.g., speaker 30 and 22) are perceived to sound less similar to one another.
+These coordinates capture each speaker's position within the MDS space
+and can be mapped visually in two dimensions as in @fig-MDS-output
+(Figure 1 in the manuscript). Stimuli that are close to one another
+(e.g., speaker 3 and 4) are perceived to sound more similar to one
+another, and stimuli that are far apart (e.g., speaker 30 and 22) are
+perceived to sound less similar to one another.
 
 ```{r plot-MDS-output-plain}
 #| label: fig-MDS-output
@@ -701,15 +890,39 @@ ggsave(
 
 ## Predicting MDS dimensions with regression trees {#sec-predicting-mds-dimensions-with-regression-trees}
 
-To explore the features in production that distinguish between speakers within the MDS space, we apply two regression trees with stimuli D1 and D2 scores as the dependent variables and the following independent variables: speakers' scores that measure their position in the leader-lagger continuum and back-vowel configuration [generated in @RN602], and stimuli articulation rate and mean pitch measures. All independent variables were scaled to facilitate comparability.
+To explore the features in production that distinguish between speakers
+within the MDS space, we apply two regression trees with stimuli D1 and
+D2 scores as the dependent variables and the following independent
+variables: speakers' scores that measure their position in the
+leader-lagger continuum and back-vowel configuration [generated in
+@RN602], and stimuli articulation rate and mean pitch measures. All
+independent variables were scaled to facilitate comparability.
 
-Unlike pairwise correlations [e.g. in @RN727; @RN726] or linear regression, regression trees allow us to both explore the role of multiple variables at once in predicting D1 and D2 and capture potential non-linear relationships between variables.
+Unlike pairwise correlations [e.g. in @RN727; @RN726] or linear
+regression, regression trees allow us to both explore the role of
+multiple variables at once in predicting D1 and D2 and capture potential
+non-linear relationships between variables.
 
-We fit the regression trees using the `parsnip` package [@RN766] in `R` with the mode set to `regression` and the engine set to `Rpart` [@RN767]. To mitigate the high variance and instability of regression trees, we took a conservative approach to fitting the two regression trees. There had to be an increase of at least 0.05 to the cost/complexity parameter for a split to occur. We also implemented random forests to evaluate the importance of each predictor in predicting each dimension. The random forests were also fit using `parsnip` in R with the mode set to `regression`, the number of trees set to 1000 and the engine set to `Ranger` [@RN768].
+We fit the regression trees using the `parsnip` package [@RN766] in `R`
+with the mode set to `regression` and the engine set to `Rpart`
+[@RN767]. To mitigate the high variance and instability of regression
+trees, we took a conservative approach to fitting the two regression
+trees. There had to be an increase of at least 0.05 to the
+cost/complexity parameter for a split to occur. We also implemented
+random forests to evaluate the importance of each predictor in
+predicting each dimension. The random forests were also fit using
+`parsnip` in R with the mode set to `regression`, the number of trees
+set to 1000 and the engine set to `Ranger` [@RN768].
 
 ### Predicting D1 with a regression tree
 
-@fig-D1-regression-tree-output shows the reported result of the regression tree fit with Dimension 1 scores as the dependent variable. Regression trees partition data sets into smaller groups ('nodes') and then fit a model for each node based on the specified independent variables. The tree then creates an if-else statement for the most important predictor at each node, partitioning the data into further nodes until specified thresholds are met.
+@fig-D1-regression-tree-output shows the reported result of the
+regression tree fit with Dimension 1 scores as the dependent variable.
+Regression trees partition data sets into smaller groups ('nodes') and
+then fit a model for each node based on the specified independent
+variables. The tree then creates an if-else statement for the most
+important predictor at each node, partitioning the data into further
+nodes until specified thresholds are met.
 
 ```{r}
 #| label: fig-D1-regression-tree-output
@@ -762,7 +975,11 @@ d1_fit %>%
   )
 ```
 
-We can see, therefore, that mean pitch is the first node in the tree predicting D1. Speakers whose (scaled) mean pitch is above or equal to 0.96 (n = 8) are estimated to have a lower D1 score. Within the lower pitch speakers, laggers in change (n = 15) are estimated to have a lower D1 than leaders (n = 15).
+We can see, therefore, that mean pitch is the first node in the tree
+predicting D1. Speakers whose (scaled) mean pitch is above or equal to
+0.96 (n = 8) are estimated to have a lower D1 score. Within the lower
+pitch speakers, laggers in change (n = 15) are estimated to have a lower
+D1 than leaders (n = 15).
 
 The next code chunk saves the plot.
 
@@ -788,7 +1005,15 @@ d1_fit %>%
 dev.off()
 ```
 
-Usefully for us, the if-else statements at each node function as 'cutoffs' that should delimit groups of speakers within the MDS space (i.e., speakers above a certain cutoff should be concentrated in a similar area of the MDS perceptual space). As such, @fig-MDS-LL-pitch maps the cutoffs from the tree onto the perceptual similarity space in @fig-MDS-output. Indeed, higher pitch speakers are concentrated in the top left (i.e., lower D1 scores) in red, with the (low-pitch) laggers also concentrated in the left, and (low-pitch) leaders to the right of the space.
+Usefully for us, the if-else statements at each node function as
+'cutoffs' that should delimit groups of speakers within the MDS space
+(i.e., speakers above a certain cutoff should be concentrated in a
+similar area of the MDS perceptual space). As such, @fig-MDS-LL-pitch
+maps the cutoffs from the tree onto the perceptual similarity space in
+@fig-MDS-output. Indeed, higher pitch speakers are concentrated in the
+top left (i.e., lower D1 scores) in red, with the (low-pitch) laggers
+also concentrated in the left, and (low-pitch) leaders to the right of
+the space.
 
 ```{r plot-MDS-output-leaders-laggers}
 #| label: fig-MDS-LL-pitch
@@ -863,7 +1088,13 @@ ggsave(
 
 #### Evaluating the stability of D1 predictor importance with random forests
 
-This section applies random forests to evaluate the stability of our independent variables in predicting D1. The next code chunk uses `rand_forest` to define a model that creates a large number of decision trees, each independent of the others. The final prediction uses all predictions from the individual trees and combines them. We can then extract from the combined trees the estimated 'importance' of our four independent variables in predicting the dependent variable.
+This section applies random forests to evaluate the stability of our
+independent variables in predicting D1. The next code chunk uses
+`rand_forest` to define a model that creates a large number of decision
+trees, each independent of the others. The final prediction uses all
+predictions from the individual trees and combines them. We can then
+extract from the combined trees the estimated 'importance' of our four
+independent variables in predicting the dependent variable.
 
 ```{r}
 #| label: set-rf-settings
@@ -891,7 +1122,18 @@ d1_rf_fit <-
   )
 ```
 
-@fig-D1-random-forest shows the extracted estimates, ranked by their importance in predicting D1. The importance value on the horizontal axis corresponds to whether a variable has a positive effect on the predictor performance of the tree (i.e., a positive value indicates more frequent use of a variable in making key decisions within the forest of decision trees, and greater improvements to model fit when used in these decisions). These measures reflect the importance of *individual* variables and are not designed to capture interactions [see @wright2016little]. @fig-D1-random-forest upholds the relative importance of mean pitch and the leader-lagger continuum to predicting D1, with the back-vowel score least important to predicting a speaker's D1 score.
+@fig-D1-random-forest shows the extracted estimates, ranked by their
+importance in predicting D1. The importance value on the horizontal axis
+corresponds to whether a variable has a positive effect on the predictor
+performance of the tree (i.e., a positive value indicates more frequent
+use of a variable in making key decisions within the forest of decision
+trees, and greater improvements to model fit when used in these
+decisions). These measures reflect the importance of *individual*
+variables and are not designed to capture interactions [see
+@wright2016little]. @fig-D1-random-forest upholds the relative
+importance of mean pitch and the leader-lagger continuum to predicting
+D1, with the back-vowel score least important to predicting a speaker's
+D1 score.
 
 ```{r d1-boosting-rf}
 #| label: fig-D1-random-forest
@@ -906,7 +1148,12 @@ d1_rf_fit %>%
 
 ### Predicting D2 with a regression tree
 
-@fig-D2-regression-tree-output shows the reported result of the regression tree fit predicting Dimension 2. Here, articulation rate is represented in the first node of the tree. Slower speakers are estimated to have a lower D2 score (n = 15). Within the faster speakers, higher pitch speakers (n = 7) are estimated to have a higher D2 than lower pitch speakers (n = 16).
+@fig-D2-regression-tree-output shows the reported result of the
+regression tree fit predicting Dimension 2. Here, articulation rate is
+represented in the first node of the tree. Slower speakers are estimated
+to have a lower D2 score (n = 15). Within the faster speakers, higher
+pitch speakers (n = 7) are estimated to have a higher D2 than lower
+pitch speakers (n = 16).
 
 ```{r}
 #| label: fig-D2-regression-tree-output
@@ -972,7 +1219,11 @@ d2_fit %>%
 dev.off()
 ```
 
-@fig-MDS-output-fast-slow-pitch then maps the cutoffs from the tree onto the perceptual similarity space in @fig-MDS-output. We can see that slower speakers are concentrated in the bottom of the space (blue), with fast and high pitch speakers concentrated in the top left (red). Fast and lower pitch speakers are then concentrated in the middle in orange.
+@fig-MDS-output-fast-slow-pitch then maps the cutoffs from the tree onto
+the perceptual similarity space in @fig-MDS-output. We can see that
+slower speakers are concentrated in the bottom of the space (blue), with
+fast and high pitch speakers concentrated in the top left (red). Fast
+and lower pitch speakers are then concentrated in the middle in orange.
 
 ```{r plot-D2-tree-MDS}
 #| label: fig-MDS-output-fast-slow-pitch
@@ -1062,7 +1313,17 @@ ggsave(
 
 #### Evaluate stability of D2 predictor importance with random forests
 
-@fig-D2-random-forest shows the results of the random forest predicting Dimension 2. The relative importance of articulation rate and mean pitch are upheld, and the leader-lagger continuum is the least important predictor of D2 scores. The random forest also, however, points to a positive impact of the Back Vowel Configuration (BVC) on predicting Dimension 2, albeit one that is much less importance than articulation rate and pitch. It is, therefore, possible that listeners differentiate between speakers based on the BVC if speed and pitch are controlled for. The evidence here points, minimally, to speed and pitch being more sysemtically perceptually salient to listeners than their covarying back vowel patterns.
+@fig-D2-random-forest shows the results of the random forest predicting
+Dimension 2. The relative importance of articulation rate and mean pitch
+are upheld, and the leader-lagger continuum is the least important
+predictor of D2 scores. The random forest also, however, points to a
+positive impact of the Back Vowel Configuration (BVC) on predicting
+Dimension 2, albeit one that is much less importance than articulation
+rate and pitch. It is, therefore, possible that listeners differentiate
+between speakers based on the BVC if speed and pitch are controlled for.
+The evidence here points, minimally, to speed and pitch being more
+sysemtically perceptually salient to listeners than their covarying back
+vowel patterns.
 
 ```{r d2-boosting-rf}
 #| label: fig-D2-random-forest
@@ -1087,9 +1348,24 @@ rf_fit2 %>%
   labs(y = "Importance (Random Forest)")
 ```
 
-This is supported by @fig-BVC-categorical, which shows the perceptual space based on speakers' BVC scores. As BVC scores did not emerge in the regression tree, we do not have an obvious cutoff for differentiating between speakers. As such, we have marked speakers whose back vowel configuration scores are 0.5 standard deviation above and below the mean, and in the middle.
+This is supported by @fig-BVC-categorical, which shows the perceptual
+space based on speakers' BVC scores. As BVC scores did not emerge in the
+regression tree, we do not have an obvious cutoff for differentiating
+between speakers. As such, we have marked speakers whose back vowel
+configuration scores are 0.5 standard deviation above and below the
+mean, and in the middle.
 
-Speakers with more negative BVC scores *are* concentrated in the bottom half of the space, in particular in the bottom right. However, there is limited difference between speakers in the middle and with more positive BVC scores, and there is an overlap between speakers with Negative BVC scores and some of the slow leaders. There is also a strong overlap with articulation rate, where most of the speakers with middle/negative BVC scores are also slower (only 3 of the 14 slower speakers have a strongly positive BVC score). It is, consequently, difficult to disentangle whether it is really is speakers' BVC scores that emerge as important in @fig-D2-random-forest or it is a by product of the importance of articulation rate differentiating between speakers along Dimension 2.
+Speakers with more negative BVC scores *are* concentrated in the bottom
+half of the space, in particular in the bottom right. However, there is
+limited difference between speakers in the middle and with more positive
+BVC scores, and there is an overlap between speakers with Negative BVC
+scores and some of the slow leaders. There is also a strong overlap with
+articulation rate, where most of the speakers with middle/negative BVC
+scores are also slower (only 3 of the 14 slower speakers have a strongly
+positive BVC score). It is, consequently, difficult to disentangle
+whether it is really is speakers' BVC scores that emerge as important in
+@fig-D2-random-forest or it is a by product of the importance of
+articulation rate differentiating between speakers along Dimension 2.
 
 ```{r plot-MDS-output-speed-BVC}
 #| label: fig-BVC-categorical
@@ -1125,11 +1401,18 @@ regression_df %>%
   guides(fill = guide_legend(override.aes = list(shape = 21, 22)))
 ```
 
-The collective results indicate that it remains possible listeners can hear differences in speakers' back vowels. However, there is not a clear interpretation of this within the MDS space, and the BVC does not reliably differentiate between speakers to the same extent as their speed, pitch and leader-lagger scores.
+The collective results indicate that it remains possible listeners can
+hear differences in speakers' back vowels. However, there is not a clear
+interpretation of this within the MDS space, and the BVC does not
+reliably differentiate between speakers to the same extent as their
+speed, pitch and leader-lagger scores.
 
 ### Visualising regression tree outputs in two-dimensions
 
-@fig-MDS-output-main-groups combines the outputs from the analyses of Dimension 1 and Dimension 2 in an interpretation of the overall space. We can discern five main groups of speakers based on the cutoffs for speed, pitch, and the leader-lagger continuum:
+@fig-MDS-output-main-groups combines the outputs from the analyses of
+Dimension 1 and Dimension 2 in an interpretation of the overall space.
+We can discern five main groups of speakers based on the cutoffs for
+speed, pitch, and the leader-lagger continuum:
 
 1.  Slower and/or lower pitched leaders (yellow, bottom right)
 
@@ -1137,11 +1420,16 @@ The collective results indicate that it remains possible listeners can hear diff
 
 3.  Leaders who are both faster and lower pitched (orange, middle).
 
-4.  Higher pitched speakers,regardless of whether they are a leader or lagger (red, top right).
+4.  Higher pitched speakers,regardless of whether they are a leader or
+    lagger (red, top right).
 
 5.  Leaders who are fast and/or higher pitched (dark orange, top).
 
-While there is some overlap between the different groups, there is nonetheless evidence for listeners making subtle perceptual distinctions between speakers based on all three variables. The MDS therefore points to speed and pitch, and one of the covarying NZE vowel patterns, underlying the perceptual relationships between speakers.
+While there is some overlap between the different groups, there is
+nonetheless evidence for listeners making subtle perceptual distinctions
+between speakers based on all three variables. The MDS therefore points
+to speed and pitch, and one of the covarying NZE vowel patterns,
+underlying the perceptual relationships between speakers.
 
 ```{r current-interpretation}
 #| label: fig-MDS-output-main-groups
@@ -1419,7 +1707,11 @@ ggsave(
 )
 ```
 
-The next two code chunks combine, and add text to, the previous figures in this section (the D1 and D2 regression tree outputs, their mapping onto the MDS space, and the interpretation of the overall space). The output is shown in @fig-MDS-output-combined-analysis which is Figure 2 in the manuscript.
+The next two code chunks combine, and add text to, the previous figures
+in this section (the D1 and D2 regression tree outputs, their mapping
+onto the MDS space, and the interpretation of the overall space). The
+output is shown in @fig-MDS-output-combined-analysis which is Figure 2
+in the manuscript.
 
 ```{r annotate-regression-trees}
 # Load regression tree predicting D1
@@ -1754,7 +2046,10 @@ image_write(
 
 ### Testing our interpretation of the MDS space
 
-In this section, we apply PERMANOVA to test whether the proposed groups in @fig-MDS-output-combined-analysis are statistically distinct. First, we extract the main group each speaker belongs to in the next code chunk.
+In this section, we apply PERMANOVA to test whether the proposed groups
+in @fig-MDS-output-combined-analysis are statistically distinct. First,
+we extract the main group each speaker belongs to in the next code
+chunk.
 
 ```{r extract-groups}
 MainGroups <- measures_df %>% 
@@ -1832,9 +2127,22 @@ MainGroups <- measures_df %>%
   
 ```
 
-We now apply standard and pairwise PERMANOVA in the next chunk. Standard PERMANOVA tests the null hypothesis that the centroids (mean middle point) and dispersion of our five speaker groups are equivalent. The result indicates that we can reject this null hypothesis, and that our speaker groups are not all equivalent. This application of PERMANOVA does not, however, tell us which groups are distinct from each other. TO investigate this, we apply pairwise PERMANOVA using a wrapper for the `adonis` function.
+We now apply standard and pairwise PERMANOVA in the next chunk. Standard
+PERMANOVA tests the null hypothesis that the centroids (mean middle
+point) and dispersion of our five speaker groups are equivalent. The
+result indicates that we can reject this null hypothesis, and that our
+speaker groups are not all equivalent. This application of PERMANOVA
+does not, however, tell us which groups are distinct from each other. TO
+investigate this, we apply pairwise PERMANOVA using a wrapper for the
+`adonis` function.
 
-The pairwise PERMANOVA indicates not all groups are statistically distinct. Instead, opposing groups on either side of the fast leaders at the centre of the space are statistically distinct from each other. Specifically, fast/high pitch laggers are distinct from slow/low pitch laggers, and slow/low pitch leaders are distinct from both high pitch speakers and fast/high pitch laggers. Finally, slow/low leaders and laggers are significantly different from each other.
+The pairwise PERMANOVA indicates not all groups are statistically
+distinct. Instead, opposing groups on either side of the fast leaders at
+the centre of the space are statistically distinct from each other.
+Specifically, fast/high pitch laggers are distinct from slow/low pitch
+laggers, and slow/low pitch leaders are distinct from both high pitch
+speakers and fast/high pitch laggers. Finally, slow/low leaders and
+laggers are significantly different from each other.
 
 ```{r apply-PERMANOVA}
 set.seed(1234)
@@ -1858,7 +2166,14 @@ pw_permanova$R2 <- round(pw_permanova$R2, 3)
 pw_permanova
 ```
 
-Adonis2 may produce artificially low p-values if centroids are similar but the dispersion of each group is different. As such, it is worth checking if the dispersion of our five groups are markedly different. We can again use the `vegan` package to identify the dispersion of each group, and test the null hypothesis that they are equivalent. The results indicate the groups have comparable levels of dispersion, meaning the results of the PERMANOVA are likely driven by differences in group centroids.
+Adonis2 may produce artificially low p-values if centroids are similar
+but the dispersion of each group is different. As such, it is worth
+checking if the dispersion of our five groups are markedly different. We
+can again use the `vegan` package to identify the dispersion of each
+group, and test the null hypothesis that they are equivalent. The
+results indicate the groups have comparable levels of dispersion,
+meaning the results of the PERMANOVA are likely driven by differences in
+group centroids.
 
 ```{r check-disperson}
 # Calculate multivariate dispersions
@@ -1877,11 +2192,14 @@ dispersion_HSD <- TukeyHSD(dispersion)
 
 ## Predicting pairwise similarity ratings with a GAMM {#sec-gamm-model}
 
-This section contains the model formula and diagnostics for the generalised additive mixed model reported in the main manuscript.
+This section contains the model formula and diagnostics for the
+generalised additive mixed model reported in the main manuscript.
 
 ### Data wrangling
 
-The next code chunk creates a data frame with unique rows for the speed, pitch, leader-lagger score and back-vowel configuration score for the first and second stimulus in each stimuli pair that participants rated.
+The next code chunk creates a data frame with unique rows for the speed,
+pitch, leader-lagger score and back-vowel configuration score for the
+first and second stimulus in each stimuli pair that participants rated.
 
 ```{r calculate-differences-between-stimuli-measures}
 # Select relevant variables
@@ -1989,7 +2307,11 @@ PW_ratings_com$Stimuli2_anon <- as.factor(PW_ratings_com$Stimuli2_anon)
 PW_ratings_com$pair_id_ordered <- as.factor(PW_ratings_com$pair_id_ordered)
 ```
 
-The next code chunk fits the GAMM used to predict the pairwise similarity ratings. The model structure consists of four 'tensor smooths' each of which represents an two-way interaction between stimulus 1 and stimulus 2 in terms of articulation rate, pitch, leader-lagger score, and back vowel score.
+The next code chunk fits the GAMM used to predict the pairwise
+similarity ratings. The model structure consists of four 'tensor
+smooths' each of which represents an two-way interaction between
+stimulus 1 and stimulus 2 in terms of articulation rate, pitch,
+leader-lagger score, and back vowel score.
 
 ```{r gamm-formula}
 gamm_fit <-
@@ -2009,7 +2331,12 @@ gamm_fit <-
 
 ### Model summary
 
-The summary below presents the model output while the tabs in @sec-model-diagnostics present residual and quantile plots. The relationships between first and second stimulus articulation rate, pitch and the leader-lagger scores significant. The relationship between the first and second stimuli back-vowel configuration scores does not significantly predict similarity ratings.
+The summary below presents the model output while the tabs in
+@sec-model-diagnostics present residual and quantile plots. The
+relationships between first and second stimulus articulation rate, pitch
+and the leader-lagger scores significant. The relationship between the
+first and second stimuli back-vowel configuration scores does not
+significantly predict similarity ratings.
 
 ```{r gamm-summary}
 #| label: model-summary
@@ -2043,7 +2370,15 @@ plot(gamm_fit)
 
 ### Model predictions
 
-We can now extract the model estimates from our model in the code chunk below, and plot the significant tensor smooths alongside the individual rated pairs in the tabs below. The horizontal axes correspond to the relevant measure for the first stimulus in a pair (speed in @fig-model-pred-speed, pitch in @fig-model-pred-pitch and leader-lagger scores in @fig-model-pred-LL ). The vertical axes correspond to the same measure for the second stimulus in a pair. A light value then corresponds to a higher estimated similarity rating, a dark value to a lower estimated similarity rating.
+We can now extract the model estimates from our model in the code chunk
+below, and plot the significant tensor smooths alongside the individual
+rated pairs in the tabs below. The horizontal axes correspond to the
+relevant measure for the first stimulus in a pair (speed in
+@fig-model-pred-speed, pitch in @fig-model-pred-pitch and leader-lagger
+scores in @fig-model-pred-LL ). The vertical axes correspond to the same
+measure for the second stimulus in a pair. A light value then
+corresponds to a higher estimated similarity rating, a dark value to a
+lower estimated similarity rating.
 
 ```{r extract-model-estimates}
 gamm_estimates <- smooth_estimates(gamm_fit) %>%
@@ -2156,7 +2491,8 @@ gamm_estimates %>%
 ```
 :::
 
-The following code chunk save the above figures as Figure 3A, 3B and 4 from the manuscript.
+The following code chunk save the above figures as Figure 3A, 3B and 4
+from the manuscript.
 
 ```{r model-predictions-speed-pitch}
 #| label: fig-model-pred-speed-pitch-LLC
@@ -2285,9 +2621,20 @@ ggsave(
 
 # Testing pre-registered correlations {#sec-testing-pre-registered-correlations}
 
-We pre-registered that we would use pairwise correlations to investigate the acoustic correlates of Dimension 1 and Dimension 2. As such, @fig-correlogram-summary shows a summary of the correlations between Dimensions 1 and 2 and speakers' leader-lagger scores, their BVC scores, their articulation rate and their mean pitch. We have also included a measure of creak in these correlations, as this was mentioned in the pre-registration.
+We pre-registered that we would use pairwise correlations to investigate
+the acoustic correlates of Dimension 1 and Dimension 2. As such,
+@fig-correlogram-summary shows a summary of the correlations between
+Dimensions 1 and 2 and speakers' leader-lagger scores, their BVC scores,
+their articulation rate and their mean pitch. We have also included a
+measure of creak in these correlations, as this was mentioned in the
+pre-registration.
 
-The results of the regression trees and random forests are upheld in that leader-lagger scores and mean pitch significantly correlate with Dimension 1 scores, and articulation rate and mean pitch significantly correlate with Dimension 2 scores. Consistent with the random forest results, back vowel scores also significantly correlate with Dimension 2 scores, albeit to a lesser extent than speed and pitch.
+The results of the regression trees and random forests are upheld in
+that leader-lagger scores and mean pitch significantly correlate with
+Dimension 1 scores, and articulation rate and mean pitch significantly
+correlate with Dimension 2 scores. Consistent with the random forest
+results, back vowel scores also significantly correlate with Dimension 2
+scores, albeit to a lesser extent than speed and pitch.
 
 ```{r correlations-MDS-variables}
 #| warning: false
@@ -2311,15 +2658,40 @@ correlogram1 <- measures_df %>%
 correlogram_function(correlogram1)
 ```
 
-However, unlike the regression trees and random forest, these pairwise correlations do not give us a sense of how the different variables relate to one another in differentiating between speakers in the perceptual space (e.g., once high pitch speakers are accounted for, leader-lagger scores correlate more strongly with Dimension 1).
+However, unlike the regression trees and random forest, these pairwise
+correlations do not give us a sense of how the different variables
+relate to one another in differentiating between speakers in the
+perceptual space (e.g., once high pitch speakers are accounted for,
+leader-lagger scores correlate more strongly with Dimension 1).
 
 # Data exclusions {#sec-data-exclusions}
 
-In our pre-registration, we stated that we would "exclude participants whose variation in the rating scale is more than 2.5 standard deviations above or below the mean range of rating scores (i.e., participants who do not vary in their ratings at all or who alternate only between the extreme values)."
+In our pre-registration, we stated that we would "exclude participants
+whose variation in the rating scale is more than 2.5 standard deviations
+above or below the mean range of rating scores (i.e., participants who
+do not vary in their ratings at all or who alternate only between the
+extreme values)."
 
-However, this methodology failed to identify listeners who alternated only between extreme values, despite the presence of participants who used only 0 and 1 values in the data. To fulfil our underlying goal of removing minimally and maximally variable participants, we instead excluded participants based on two criteria. First, participants who used a range smaller than 0.25 of rating scale (i.e., all 40 ratings were within the same quarter of the scale) were excluded. Second, participants who used the extremes of the rating scale (i.e., they rated stimuli as 1 or 0) for 34 or more stimuli were also excluded. The distribution of participants' ratings shows that almost all participants utilised a range of values and did not rely solely on the ends of the scale, marking those who did as outliers. The two criteria resulted in us excluding only seven participants from the analysis.
+However, this methodology failed to identify listeners who alternated
+only between extreme values, despite the presence of participants who
+used only 0 and 1 values in the data. To fulfil our underlying goal of
+removing minimally and maximally variable participants, we instead
+excluded participants based on two criteria. First, participants who
+used a range smaller than 0.25 of rating scale (i.e., all 40 ratings
+were within the same quarter of the scale) were excluded. Second,
+participants who used the extremes of the rating scale (i.e., they rated
+stimuli as 1 or 0) for 34 or more stimuli were also excluded. The
+distribution of participants' ratings shows that almost all participants
+utilised a range of values and did not rely solely on the ends of the
+scale, marking those who did as outliers. The two criteria resulted in
+us excluding only seven participants from the analysis.
 
-This section explains in more detail the rationale for excluding the seven participants who were not included in the reported analysis. @fig-histogram-overview plots the overall distribution of similarity ratings in a histogram using 10 bins (i.e., an 11-point scale between 0 and 1). We can see that participants overall use the full scale, but generally favour the lower end of the scale over the higher end.
+This section explains in more detail the rationale for excluding the
+seven participants who were not included in the reported analysis.
+@fig-histogram-overview plots the overall distribution of similarity
+ratings in a histogram using 10 bins (i.e., an 11-point scale between 0
+and 1). We can see that participants overall use the full scale, but
+generally favour the lower end of the scale over the higher end.
 
 ```{r}
 #| label: fig-histogram-overview
@@ -2342,9 +2714,30 @@ example |>
   geom_histogram(bins = 11)
 ```
 
-Calculating whether a participant's range of used values was 2.5 SD deviations above or below the mean range only identified outliers who varied minimally in their ratings, and no speakers who alternated between extreme values, despite there being participants who (almost) exclusively used 0 and 1 values. We therefore opted to exclude participants based on whether they use a range smaller than 0.25 (1/4) of the scale, and whether 34 or more of their ratings were a 0 or a 1. The 34 cutoff is arbitrary, but it captures a number of participants who effectively used 0 or 1 exclusively, with very minor variation at the extreme of the scale. Specifically, of the three excluded participants who did not exclusively use 1 or 0, all used only 1 or 0 ratings except for: one rating of 0.015, two scores of 0.034 and 0.975, and four scores greater than 0.9, respectively.
+Calculating whether a participant's range of used values was 2.5 SD
+deviations above or below the mean range only identified outliers who
+varied minimally in their ratings, and no speakers who alternated
+between extreme values, despite there being participants who (almost)
+exclusively used 0 and 1 values. We therefore opted to exclude
+participants based on whether they use a range smaller than 0.25 (1/4)
+of the scale, and whether 34 or more of their ratings were a 0 or a 1.
+The 34 cutoff is arbitrary, but it captures a number of participants who
+effectively used 0 or 1 exclusively, with very minor variation at the
+extreme of the scale. Specifically, of the three excluded participants
+who did not exclusively use 1 or 0, all used only 1 or 0 ratings except
+for: one rating of 0.015, two scores of 0.034 and 0.975, and four scores
+greater than 0.9, respectively.
 
-As @fig-histogram-examples shows, exclusively using the extremes of the rating scale is not consistent with the behaviour of most participants. @fig-histogram-examples displays the distribution of similarity ratings for 12 random participants, and for the 7 participants excluded under our criteria of using either a) less than a quarter of the rating scale or b) using only 0 or 1 for 34 or more of their 40 ratings. We can see that participant 294 did not use the range of the rating scale at all, staying at the midpoint for their ratings. The other participants are concentrated almost exclusively at the extremes of scale, in contrast to the randomly selected participants.
+As @fig-histogram-examples shows, exclusively using the extremes of the
+rating scale is not consistent with the behaviour of most participants.
+@fig-histogram-examples displays the distribution of similarity ratings
+for 12 random participants, and for the 7 participants excluded under
+our criteria of using either a) less than a quarter of the rating scale
+or b) using only 0 or 1 for 34 or more of their 40 ratings. We can see
+that participant 294 did not use the range of the rating scale at all,
+staying at the midpoint for their ratings. The other participants are
+concentrated almost exclusively at the extremes of scale, in contrast to
+the randomly selected participants.
 
 ```{r}
 #| label: fig-histogram-examples
@@ -2404,17 +2797,34 @@ example |>
   scale_fill_brewer(palette = "Dark2")
 ```
 
-In our pre-registration, we also stated that we would filter outliers based on whether they were 2.5 SDs below the mean **time taken** to complete the task. This criterion was never satisfied, so no one was removed.
+In our pre-registration, we also stated that we would filter outliers
+based on whether they were 2.5 SDs below the mean **time taken** to
+complete the task. This criterion was never satisfied, so no one was
+removed.
 
 # Comparing across reported and pre-registered results {#sec-comparing-across-reported-and-pre-registered-results}
 
-There remains, nonetheless, a reasonable question about whether changing our filtering criteria meaningfully changes the results of the analysis. As such, this section applies an MDS analysis, as applied to the reported data, to a dissimilarity matrix generated from the ratings data that only has participants removed as per the preregistration, and tests correlations between the Dimension 1 and Dimension 2 scores from this and the reported analysis. The section also applies the same GAMM formula to the pairwise ratings with only the pre-registered filtering applied.
+There remains, nonetheless, a reasonable question about whether changing
+our filtering criteria meaningfully changes the results of the analysis.
+As such, this section applies an MDS analysis, as applied to the
+reported data, to a dissimilarity matrix generated from the ratings data
+that only has participants removed as per the preregistration, and tests
+correlations between the Dimension 1 and Dimension 2 scores from this
+and the reported analysis. The section also applies the same GAMM
+formula to the pairwise ratings with only the pre-registered filtering
+applied.
 
-As will become clear from the the following sections, the different filtering criteria does not meaningfully change the results of the analysis. The same structures underly both MDS analyses, and the same predictors emerge as significant in the GAMM.
+As will become clear from the the following sections, the different
+filtering criteria does not meaningfully change the results of the
+analysis. The same structures underly both MDS analyses, and the same
+predictors emerge as significant in the GAMM.
 
 ## Comparing MDS (Spline) dimensions
 
-As with the reported MDS, @fig-stressFunction-prereg indicates we need at least one dimension, and that we aren't including *too few* dimensions if we run a two-dimensional MDS on this data. We therefore again run an spline MDS with two dimensions.
+As with the reported MDS, @fig-stressFunction-prereg indicates we need
+at least one dimension, and that we aren't including *too few*
+dimensions if we run a two-dimensional MDS on this data. We therefore
+again run an spline MDS with two dimensions.
 
 ```{r determine-number-of-dimensions}
 #| label: fig-stressFunction-prereg
@@ -2437,7 +2847,8 @@ plot_mds_test(prereg_test) +
   labs(y = "Reduction in Stress", x = "Number of Dimensions in MDS Analysis", colour = "Data")
 ```
 
-The next code chunk again selects the the two-dimensional MDS analysis with the best random start from 100 random starts.
+The next code chunk again selects the the two-dimensional MDS analysis
+with the best random start from 100 random starts.
 
 ```{r determine-random-start-prereg}
 set.seed(200)
@@ -2468,9 +2879,21 @@ dimensions_PW_prereg <- as.data.frame(conf_PW_prereg) %>%
   rownames_to_column(var = "Speaker")
 ```
 
-The most direct way to assess whether the two MDS analyses have the same underlying structure is to test correlations between speakers' D1 and D2 scores from each analysis. However, it is the relative distance between stimuli that is important for the interpretation of an MDS space. The position of stimuli within the space is otherwise arbitrary; while it is possible that stimuli D1 or D2 scores from separate MDS analyses with a similar underlying structure would directly align with one another, this is not guaranteed (e.g., D1 could capture speed and pitch and D2 primarily the leader-lagger vowels, which would result in no/low correlations for either dimension).
+The most direct way to assess whether the two MDS analyses have the same
+underlying structure is to test correlations between speakers' D1 and D2
+scores from each analysis. However, it is the relative distance between
+stimuli that is important for the interpretation of an MDS space. The
+position of stimuli within the space is otherwise arbitrary; while it is
+possible that stimuli D1 or D2 scores from separate MDS analyses with a
+similar underlying structure would directly align with one another, this
+is not guaranteed (e.g., D1 could capture speed and pitch and D2
+primarily the leader-lagger vowels, which would result in no/low
+correlations for either dimension).
 
-As such, to make the two MDS analyses directly comparable, the next code chunk uses the `procrustes()` function from the `vegan` package to rotate the D1/D2 stimuli scores so that the MDS space is maximally similar to that of the reported MDS space.
+As such, to make the two MDS analyses directly comparable, the next code
+chunk uses the `procrustes()` function from the `vegan` package to
+rotate the D1/D2 stimuli scores so that the MDS space is maximally
+similar to that of the reported MDS space.
 
 ```{r procrustes-rotation}
 # Apply procrustes rotation
@@ -2494,7 +2917,17 @@ measures_df <- measures_df %>%
 
 ## Testing correlations between reported and pre-registered MDS scores
 
-@fig-correlogram-prereg tests Spearman correlations between the reported D1/D2 scores, and the rotated D1/D2 scores from the MDS applied to the pre-registered data. The correlations indicate that the underlying structure of the perceptual similarity space is stable across the reported and pre-registered data; D1 scores have a very strong, significant positive correlation (*r* = .92, *p* \< 0.05), as do D2 scores (*r* = .8, *p* \< 0.05). It is also worth noting that, while not significant, the rotated D1 scores correlate slightly with the reported D2 scores, and the rotated D2 scores with the reported D1 scores, indicating that there may still be some structure that is similar but captured differently across the two dimensions from each analysis.
+@fig-correlogram-prereg tests Spearman correlations between the reported
+D1/D2 scores, and the rotated D1/D2 scores from the MDS applied to the
+pre-registered data. The correlations indicate that the underlying
+structure of the perceptual similarity space is stable across the
+reported and pre-registered data; D1 scores have a very strong,
+significant positive correlation (*r* = .92, *p* \< 0.05), as do D2
+scores (*r* = .8, *p* \< 0.05). It is also worth noting that, while not
+significant, the rotated D1 scores correlate slightly with the reported
+D2 scores, and the rotated D2 scores with the reported D1 scores,
+indicating that there may still be some structure that is similar but
+captured differently across the two dimensions from each analysis.
 
 ```{r test-correlations-MDS-results}
 #| warning: false
@@ -2519,9 +2952,15 @@ correlogram2 <- measures_df %>%
 correlogram_function(correlogram2)
 ```
 
-The consistency of the underlying structure is supported by the comparison in @fig-compare-MDS-spaces. Across both spaces, similar speakers are grouped together and further apart.[^3]
+The consistency of the underlying structure is supported by the
+comparison in @fig-compare-MDS-spaces. Across both spaces, similar
+speakers are grouped together and further apart.[^3]
 
-[^3]: The only discernible exception is speaker 37, who moves substantially along D2. This may be a reflection of 37 being a fast but low pitch lagger, and consequently less perceptually stable (i.e., they could be grouped with the fast laggers or the slower/lower pitch laggers).
+[^3]: The only discernible exception is speaker 37, who moves
+    substantially along D2. This may be a reflection of 37 being a fast
+    but low pitch lagger, and consequently less perceptually stable
+    (i.e., they could be grouped with the fast laggers or the
+    slower/lower pitch laggers).
 
 ```{r}
 #| label: fig-compare-MDS-spaces
@@ -2540,11 +2979,15 @@ measures_df %>%
 
 ## Comparing GAMM results between reported and preregistered data
 
-In this section we apply the same GAMM formula as @sec-gamm-model to the data filtered based on the preregistration.
+In this section we apply the same GAMM formula as @sec-gamm-model to the
+data filtered based on the preregistration.
 
 ### Data wrangling
 
-The code chunk below again creates a data frame with unique rows for the speed, pitch, leader-lagger score and back-vowel configuration score for the first and second stimulus in each stimuli pair, but this time for the pre-registered data frame.
+The code chunk below again creates a data frame with unique rows for the
+speed, pitch, leader-lagger score and back-vowel configuration score for
+the first and second stimulus in each stimuli pair, but this time for
+the pre-registered data frame.
 
 ```{r data-wrangling-for-model}
 PW_ratings_prereg <- PW_ratings_prereg %>%
@@ -2614,7 +3057,13 @@ PW_ratings_filtered_com$Stimuli2_anon <- as.factor(PW_ratings_filtered_com$Stimu
 PW_ratings_filtered_com$pair_id_ordered <- as.factor(PW_ratings_filtered_com$pair_id_ordered)
 ```
 
-The summary below presents the model output while the tabs in @sec-model-diagnostics-prereg present residual and quantile plots. As in the reported GAMM, the relationships between first and second stimulus articulation rate, pitch and the leader-lagger scores are significant. Also as in the reported GAMM, the relationship between the first and second stimuli back-vowel configuration scores does not significantly predict similarity ratings.
+The summary below presents the model output while the tabs in
+@sec-model-diagnostics-prereg present residual and quantile plots. As in
+the reported GAMM, the relationships between first and second stimulus
+articulation rate, pitch and the leader-lagger scores are significant.
+Also as in the reported GAMM, the relationship between the first and
+second stimuli back-vowel configuration scores does not significantly
+predict similarity ratings.
 
 ```{r re-fit-model}
 gamm_fit_prereg <-
@@ -2650,7 +3099,12 @@ summary(gamm_fit_prereg, re.test = F)
 
 ### Model diagnostics {#sec-model-diagnostics-prereg}
 
-While the overall result of the model is stable, it is worth noting that there are outliers in the model residuals here that were not in those of the reported model (See @fig-residuals-prereg, especially the QQ plot). This provides further evidence that there were outliers that the pre-registered filtering failed to identify, but that our adjusted filtering did.
+While the overall result of the model is stable, it is worth noting that
+there are outliers in the model residuals here that were not in those of
+the reported model (See @fig-residuals-prereg, especially the QQ plot).
+This provides further evidence that there were outliers that the
+pre-registered filtering failed to identify, but that our adjusted
+filtering did.
 
 ::: panel-tabset
 #### Model residuals
@@ -2674,11 +3128,18 @@ plot(gamm_fit_prereg)
 
 ### Model predictions
 
-We can now extract the model estimates in the code chunk below, and plot the significant tensor smooths alongside the individual rated pairs in @fig-model-pred-speed-2, @fig-model-pred-pitch-2, and @fig-model-pred-LL-2
+We can now extract the model estimates in the code chunk below, and plot
+the significant tensor smooths alongside the individual rated pairs in
+@fig-model-pred-speed-2, @fig-model-pred-pitch-2, and
+@fig-model-pred-LL-2
 
-We see effects of first and second stimuli speed, pitch, and the leader-lagger-lagger continuum in predicting perceived similarity that are directly comparable to the effects in displayed @fig-model-pred-speed, @fig-model-pred-pitch, and @fig-model-pred-LL.
+We see effects of first and second stimuli speed, pitch, and the
+leader-lagger-lagger continuum in predicting perceived similarity that
+are directly comparable to the effects in displayed
+@fig-model-pred-speed, @fig-model-pred-pitch, and @fig-model-pred-LL.
 
-We conclude that our deviation from our preregistration has not materially affected our reported results.
+We conclude that our deviation from our preregistration has not
+materially affected our reported results.
 
 ```{r extract-estimates-prereg}
 # We extract estimates to plot
